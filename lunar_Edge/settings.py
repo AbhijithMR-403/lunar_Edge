@@ -71,6 +71,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'lunar_Edge.wsgi.application'
 
+AUTH_USER_MODEL='authenticator.Account'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

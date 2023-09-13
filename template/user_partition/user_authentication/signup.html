@@ -26,7 +26,7 @@
 					<div class="card fat">
 						<div class="card-body">
 							<h4 class="card-title">Register</h4>
-							<form method="POST" class="my-login-validation" action='/sign_up/' novalidate=''> {% csrf_token %}
+							<form method="POST" class="my-login-validation" action='/signup/' novalidate=''> {% csrf_token %}
 								<div class="form-group">
 									<label for="name">Name</label>
 									<input id="name" type="text" class="form-control" name="name" autofocus required value="">
@@ -45,14 +45,14 @@
 
 								<div class="form-group">
 									<label for="password">Password</label>
-									<input id="password" type="password" class="form-control" name="password" required data-eye>
+									<input id="password" type="password" class="form-control" name="password1" required data-eye>
 									<div class="invalid-feedback">
 										Password is required
 									</div>
 								</div>
 								<div class="form-group">
 									<label for="password">Re-Password</label>
-									<input id="password" type="password" class="form-control" name="password" required data-eye>
+									<input id="password" type="password" class="form-control" name="password2" required data-eye>
 									<div class="invalid-feedback">
 										Not matching
 									</div>
