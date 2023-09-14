@@ -5,5 +5,7 @@ app_name='admin_panel'
 
 urlpatterns = [
     # path('',views.login,name='adminlogin'),
-    path('',views.base,name='base'),
+    path('',views.dashboard,name='dashboard'),
+    path('',views.product_list,name='product_list'),
+    # path('')
 ]
