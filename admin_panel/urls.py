@@ -1,6 +1,9 @@
 from django.urls import path
-from authenticator import views
+from admin_panel import views
+
+app_name='admin_panel'
 
 urlpatterns = [
-    # path('',views.userLogin,name='userlogin'),
+    # path('',views.login,name='adminlogin'),
+    path('',views.base,name='base'),
 ]

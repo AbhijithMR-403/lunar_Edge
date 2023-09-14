@@ -36,7 +36,7 @@ def user_login(request):
       
       print("\n\n\n\n\ndadsfasd\n\n\n\n\n\n")
       login(request,user)
-      return redirect('user_partition:home')
+      return redirect('user_home:home')
    
    
 
@@ -89,7 +89,3 @@ def user_signup(request):
    # Myuser.save()
    return redirect('user_partition:userlogin')
 
-
-
-def home_page(request):
-   return render(request,'user_partition/user_page/home.html')

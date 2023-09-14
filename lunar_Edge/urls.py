@@ -16,9 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('adn/', admin.site.urls),
     path('',include('authenticator.urls')),
-    path('adminSide/',include('admin_panel.urls')),
+    path('',include('user_panel.urls')),
+    path('admin/',include('admin_panel.urls')),
 ]
