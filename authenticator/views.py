@@ -7,7 +7,7 @@ from django.contrib.auth import login,logout,authenticate
 def user_login(request):
    
    if request.user.is_authenticated:
-      return redirect('user_partition:home')
+      return redirect('user_home:home')
    if request.method != 'POST':
       return render(request,'user_partition/user_authentication/login.html')
    email=request.POST['email']

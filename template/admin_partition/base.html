@@ -38,17 +38,17 @@
                 <li class="menu-item active">
                     <a class="menu-link" href="admin_panel:dashboard"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
-                    </a>
+                    </a>v
                 </li>
                 <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-products-list.html"> <i class="icon material-icons md-shopping_bag"></i>
+                    <a class="menu-link" href="page-products-list.htmla"03> <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
                     <div class="submenu">
-                        <a href="admin_panel:product_list">Product List</a>
+                        <a href="{% url 'admin_panel:product_list' %}">Product List</a>
                         {% comment %} <a href="page-products-grid.html">Product grid</a>
                         <a href="page-products-grid-2.html">Product grid 2</a> {% endcomment %}
-                        <a href="page-categories.html">Categories</a>
+                        <a href="{% url 'admin_panel:categories' %}page-categories.html">Categories</a>
                     </div>
                 </li>
                 <li class="menu-item has-submenu">
