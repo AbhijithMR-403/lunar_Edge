@@ -3,10 +3,9 @@ from django.db import models
 class Category(models.Model):
     category_name = models.CharField(max_length=20, unique=True)
     slug = models.SlugField(max_length=20,unique=False)
-    description = models.TextField(max_length=100,blank= True)
+    description = models.TextField(max_length=500,blank= True)
     is_available = models.BooleanField(default=True)
     soft_deleted = models.BooleanField(default=False)
-    category_image = models.ImageField(upload_to='photos/categories',null=True)
     
     class Meta:
         verbose_name = 'category'

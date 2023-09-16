@@ -36,10 +36,15 @@ def user_login(request):
       
       print("\n\n\n\n\ndadsfasd\n\n\n\n\n\n")
       login(request,user)
-      return redirect('user_home:home')
+      return redirect('user_partition:otp')
+      
    
    
-
+def otp(request):
+   if request.method!="POST":
+      return render(request,'user_partition/user_authentication/otp.html')
+   return redirect('user_home:home')
+   
 
 
 def user_signup(request):

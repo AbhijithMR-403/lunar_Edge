@@ -6,5 +6,5 @@ app_name = 'user_partition'
 urlpatterns = [
     path('login/',views.user_login,name='userlogin'),
     path('signup/',views.user_signup,name='usersignup'),
-    # path('otp/',views.otp,name='otp'),
+    path('otp/',views.otp,name='otp'),
 ]
