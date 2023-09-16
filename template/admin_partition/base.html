@@ -27,7 +27,7 @@
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-                <img src="assets/imgs/theme/logo.svg" class="logo" alt="Evara Dashboard">
+                <img src="{% static 'img/logo/lunarEdge_logo1.png' %}" class="logo" alt="Lunar Edge">
             </a>
             <div>
                 <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
@@ -36,9 +36,9 @@
         <nav>
             <ul class="menu-aside">
                 <li class="menu-item active">
-                    <a class="menu-link" href="admin_panel:dashboard"> <i class="icon material-icons md-home"></i>
+                    <a class="menu-link" href="{% url 'admin_panel:dashboard' %}"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
-                    </a>v
+                    </a>
                 </li>
                 <li class="menu-item has-submenu">
                     <a class="menu-link" href="page-products-list.htmla"03> <i class="icon material-icons md-shopping_bag"></i>
@@ -48,7 +48,7 @@
                         <a href="{% url 'admin_panel:product_list' %}">Product List</a>
                         {% comment %} <a href="page-products-grid.html">Product grid</a>
                         <a href="page-products-grid-2.html">Product grid 2</a> {% endcomment %}
-                        <a href="{% url 'admin_panel:categories' %}page-categories.html">Categories</a>
+                        <a href="{% url 'admin_panel:categories' %}">Categories</a>
                     </div>
                 </li>
                 <li class="menu-item has-submenu">

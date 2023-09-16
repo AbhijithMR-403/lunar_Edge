@@ -6,3 +6,9 @@ def dashboard(request):
 
 def product_list(request):
     return render(request,'admin_partition/product.html')
+
+def categories(request):
+    return render(request,'admin_partition/category.html')
+
+def login(request):
+    return render(request,'admin_partition/login.html')
