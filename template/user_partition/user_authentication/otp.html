@@ -26,7 +26,7 @@
 							<form method="POST" class="my-login-validation" action={% url "user_partition:otp" %}  novalidate="">{% csrf_token %}
 								<div class="form-group">
 									<label for="password">OTP
-										<a href={% url "user_partition:otp" %} class="float-right">
+										<a href={% url "user_partition:sent_otp" %} class="float-right">
 											Resend otp?
 										</a>
 									</label>

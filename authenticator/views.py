@@ -39,32 +39,30 @@ def user_login(request):
    else:
       
       request.session['email']=email
-      return redirect('user_partition:otp')
+
+      return redirect('user_partition:sent_otp')
       
 def sent_otp(request):
    random_num=random.randint(1000,9999)
    request.session['OTP_Key']=random_num
-   print(random_num)
    send_mail(
    "OTP AUTHENTICATING LUNAR_EDGE",
    f"{random_num} -OTP",
-   "luttapimalayali.com",
+   "luttapimalayali@gmail.com",
    [request.session['email']],
    fail_silently=False,
 )
+   return redirect('user_partition:otp')
    
 def otp(request):
    user=Account.objects.get(email=request.session['email'])
    if request.method=="POST":
-      print(request.POST['otp'])
       if str(request.session['OTP_Key']) != str(request.POST['otp']):
          print(request.session['OTP_Key'],request.POST['otp'])
          user.is_active=False
       else:
-         print('you are great maaannnnnnn/.......')
          login(request,user)
          return redirect('user_home:home')
-   sent_otp(request)
    return render(request,'user_partition/user_authentication/otp.html')
    
 

@@ -3,6 +3,7 @@ from authenticator.models import Account
 from admin_panel.models import *
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
+from .forms import product_form
 
 # Create your views here.
 def dashboard(request):
@@ -54,3 +55,7 @@ def login(request):
 def add_categories(request):
     
     return redirect('admin_panel:categories')
+
+def add_product(request):
+    form=product_form
+    return render(request,'admin_partition/addproduct.html',{'form':form})
