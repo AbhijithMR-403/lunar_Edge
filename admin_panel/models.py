@@ -1,11 +1,12 @@
 from django.db import models
 
 class Category(models.Model):
-    category_name = models.CharField(max_length=20, unique=True)
-    slug = models.SlugField(max_length=20,unique=False)
-    description = models.TextField(max_length=500,blank= True)
-    is_available = models.BooleanField(default=True)
-    soft_deleted = models.BooleanField(default=False)
+    category_name       = models.CharField(max_length=20, unique=True)
+    slug                = models.SlugField(max_length=20,unique=False)
+    description         = models.TextField(max_length=500,blank= True)
+    parent              = models.ForeignKey("Category", on_delete=models.CASCADE,null=True,blank=True)
+    is_available        = models.BooleanField(default=True)
+    soft_deleted        = models.BooleanField(default=False)
     
     class Meta:
         verbose_name = 'category'

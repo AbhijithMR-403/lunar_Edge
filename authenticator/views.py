@@ -2,6 +2,8 @@ from django.shortcuts import render,HttpResponse,redirect,HttpResponseRedirect
 from .models import Account
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
+from django.core.mail import send_mail
+import random
 
 # Create your views here.
 def user_login(request):
@@ -29,22 +31,25 @@ def user_login(request):
    
    user = authenticate(email=email,password=password)
    if user is None:
-      print("\n\n\n\n\ndadsfasd\n\n\n\n\n\n")
       messages.error(request,'Invalid detailes')
       return redirect('user_partition:userlogin')
    else:
-      
-      print("\n\n\n\n\ndadsfasd\n\n\n\n\n\n")
       login(request,user)
       return redirect('user_partition:otp')
       
    
    
 def otp(request):
-   if request.method!="POST":
-      return render(request,'user_partition/user_authentication/otp.html')
-   return redirect('user_home:home')
+   send_mail(
+    "OTP AUTHENTICATING LUNAR_EDGE",
+    "Here is the message.",
+    "luttapimalayali.com",
+    ["abhijithmr581@gmail.com"],
+    fail_silently=False,
+)
+   return render(request,'user_partition/user_authentication/otp.html')
    
+
 
 
 def user_signup(request):
