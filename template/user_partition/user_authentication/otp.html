@@ -23,10 +23,10 @@
 					<div class="card fat">
 						<div class="card-body">
 							<h4 class="card-title">Verification</h4>
-							<form method="POST" class="my-login-validation" action="/" novalidate="">{% csrf_token %}
+							<form method="POST" class="my-login-validation" action={% url "user_partition:otp" %}  novalidate="">{% csrf_token %}
 								<div class="form-group">
 									<label for="password">OTP
-										<a href="forgot.html" class="float-right">
+										<a href={% url "user_partition:otp" %} class="float-right">
 											Resend otp?
 										</a>
 									</label>

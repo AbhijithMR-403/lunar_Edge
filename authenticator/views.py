@@ -7,6 +7,7 @@ import random
 
 # Create your views here.
 def user_login(request):
+   print('ajsdhfkjashdfkjhasjdfhkasdjhdfkj\n\n\n',request.method,'\nkjsdkfjaksdj\n\n\n')
    
    if request.user.is_authenticated:
       return redirect('user_home:home')
@@ -22,31 +23,48 @@ def user_login(request):
    except:
       pass
    # only needed when you are doing email validation 
-   try:
-      if Account.objects.filter(email=email,is_active=False).exists():
-            messages.warning(request,'You have to active first ')
-            return redirect('user_partition:userlogin')
-   except:
-      pass
+
+   # try:
+   #    if Account.objects.filter(email=email,is_active=False).exists():
+            # messages.warning(request,'You have to active first ')
+            # Account.objects.get(email=email,is_active=False).is_active=True
+            # return redirect('user_partition:userlogin')
+   # except:
+   #    pass
    
    user = authenticate(email=email,password=password)
    if user is None:
       messages.error(request,'Invalid detailes')
       return redirect('user_partition:userlogin')
    else:
-      login(request,user)
+      
+      request.session['email']=email
       return redirect('user_partition:otp')
       
-   
+def sent_otp(request):
+   random_num=random.randint(1000,9999)
+   request.session['OTP_Key']=random_num
+   print(random_num)
+   send_mail(
+   "OTP AUTHENTICATING LUNAR_EDGE",
+   f"{random_num} -OTP",
+   "luttapimalayali.com",
+   [request.session['email']],
+   fail_silently=False,
+)
    
 def otp(request):
-   send_mail(
-    "OTP AUTHENTICATING LUNAR_EDGE",
-    "Here is the message.",
-    "luttapimalayali.com",
-    ["abhijithmr581@gmail.com"],
-    fail_silently=False,
-)
+   user=Account.objects.get(email=request.session['email'])
+   if request.method=="POST":
+      print(request.POST['otp'])
+      if str(request.session['OTP_Key']) != str(request.POST['otp']):
+         print(request.session['OTP_Key'],request.POST['otp'])
+         user.is_active=False
+      else:
+         print('you are great maaannnnnnn/.......')
+         login(request,user)
+         return redirect('user_home:home')
+   sent_otp(request)
    return render(request,'user_partition/user_authentication/otp.html')
    
 

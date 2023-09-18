@@ -18,7 +18,7 @@ class AccountManager(BaseUserManager):
             last_name=last_name,
         )
         # change when email verificartion addedd
-        # user.is_active=True
+        user.is_active=True
         
         user.set_password(password)
         user.save(using=self._db)
@@ -53,8 +53,6 @@ class Account(AbstractBaseUser):
     is_staff        = models.BooleanField(default=False)
     is_active       = models.BooleanField(default=False)
     is_superadmin   = models.BooleanField(default=False)
-    otp             = models.CharField(max_length=6,null=True, blank=True)
-    otp_expiry      = models.DateTimeField(default=timezone.now, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

@@ -48,7 +48,7 @@ def login(request):
     else:
        login(request,user)
        return redirect('user_partition:otp')
-    return render(request,'admin_partition/sign_in/login.html')
+    # return render(request,'admin_partition/sign_in/login.html')
 
 
 def add_categories(request):
