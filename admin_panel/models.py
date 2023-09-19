@@ -9,6 +9,7 @@ class Category(models.Model):
     parent              = models.ForeignKey("Category", on_delete=models.CASCADE,null=True,blank=True)
     is_available        = models.BooleanField(default=True)
     soft_deleted        = models.BooleanField(default=False)
+    category_img        = models.ImageField(upload_to='photos/categories',null=True)
     
     class Meta:
         verbose_name = 'category'

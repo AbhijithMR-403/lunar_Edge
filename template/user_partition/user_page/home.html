@@ -105,20 +105,23 @@
     <div class="container-fluid pt-5">
         <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class=" pr-3">Categories</span></h2>
         <br>
+        
         <div class="row px-xl-5 pb-3">
+            {% for category in categories %}
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                 <a class="text-decoration-none" href="">
                     <div class="cat-item d-flex align-items-center mb-4">
                         <div class="overflow-hidden" style="width: 100px; height: 100px;">
-                            {% comment %}? <img class="img-fluid" src="img/cat-1.jpg" alt=""> {% endcomment %}
+                            <img class="img-fluid" src="{{category.category_img.url}}" alt="">
                         </div>
                         <div class="flex-fill pl-3">
-                            <h6>Category Name</h6>
-                            <small class="text-body">100 Products</small>
+                            <h6>{{category.category_name}}</h6>
+                            <small class="text-body">10</small>
                         </div>
                     </div>
                 </a>
             </div>
+            {% endfor %}
             {% comment %} <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                 <a class="text-decoration-none" href="">
                     <div class="cat-item img-zoom d-flex align-items-center mb-4">
@@ -271,10 +274,11 @@
     <div class="container-fluid pt-5 pb-3">
         <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="pr-3">Featured Products</span></h2>
         <div class="row px-xl-5">
+            {% for product in products %}
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                 <div class="product-item bg-light mb-4">
                     <div class="product-img position-relative overflow-hidden">
-                        {% comment %}? <img class="img-fluid w-100" src="img/product-1.jpg" alt=""> {% endcomment %}
+                        <img class="img-fluid w-100" src="{{ product.product_images }}" alt="">
                         <div class="product-action">
                             <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
                             <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
@@ -298,6 +302,7 @@
                     </div>
                 </div>
             </div>
+            {% endfor %}
             {% comment %} <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                 <div class="product-item bg-light mb-4">
                     <div class="product-img position-relative overflow-hidden">
