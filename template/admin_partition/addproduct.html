@@ -68,8 +68,20 @@
                 <a href="#" class="btn btn-primary btn-sm rounded">Create new</a>
             </div>
         </div>
+        
+        {% comment %} To find error {% endcomment %}
+        {% if form.errors %}
+<div class="alert alert-danger">
+    <strong>Form errors:</strong>
+    <ul>
+        {% for field, errors in form.errors.items %}
+        <li>{{ field }}: {{ errors }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
     
-    <form action="" method="post"> {% csrf_token %}
+    <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
         {{form.as_p}}
         <button type="submit" class="btn btn-primary">Add</button>
     </form>

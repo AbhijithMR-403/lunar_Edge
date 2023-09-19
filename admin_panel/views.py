@@ -10,7 +10,11 @@ def dashboard(request):
     return render(request,'admin_partition/dashboard.html')
 
 def product_list(request):
-    return render(request,'admin_partition/product.html')
+    products=Product.objects.all()
+    content={
+        'products':products
+    }
+    return render(request,'admin_partition/product.html',content)
 
 
 def categories(request):
@@ -23,33 +27,30 @@ def categories(request):
     return render(request,'admin_partition/category.html',content)
 
 
-def login(request):
-    email=request.POST['email']
-    password=request.POST['password']
-    email=request.POST['email']
-    password=request.POST['password']
-    try:
-       if not Account.objects.filter(email=email).exists():
-             messages.warning(request,'No user found')
-             return redirect('user_partition:userlogin')
-    except:
-       pass
-    # only needed when you are doing email validation 
-    try:
-       if Account.objects.filter(email=email,is_active=False).exists():
-             messages.warning(request,'You have to active first ')
-             return redirect('user_partition:userlogin')
-    except:
-       pass
+def admin_login(request):
+    if request.method =='POST':
+        email=request.POST['email']
+        password=request.POST['password']
+        try:
+            if not Account.objects.filter(email=email).exists():
+                    messages.warning(request,'No user found')
+                    return redirect('admin_panel:login')
+        except:
+            pass
+        # only needed when you are doing email validation 
     
-    user = authenticate(email=email,password=password)
-    if user is None:
-       messages.error(request,'Invalid detailes')
-       return redirect('user_partition:userlogin')
-    else:
-       login(request,user)
-       return redirect('user_partition:otp')
-    # return render(request,'admin_partition/sign_in/login.html')
+        user = authenticate(email=email,password=password)
+        if user is None:
+            messages.error(request,'Invalid detailes')
+            return redirect('admin_panel:login')
+        else:
+            if user.is_superuser:
+                login(request,user)
+                return redirect('admin_panel:dashboard')
+            else:
+                messages.error('Only for superuser')
+
+    return render(request,'admin_partition/sign_in/login.html')
 
 
 def add_categories(request):
@@ -58,4 +59,14 @@ def add_categories(request):
 
 def add_product(request):
     form=product_form
+    if request.method =="POST":
+        form=product_form(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            print(product)
+            product.save()
+            return redirect('admin_panel:add_product')
+        else:
+            return render(request,'admin_partition/addproduct.html',{'form':form})
+
     return render(request,'admin_partition/addproduct.html',{'form':form})

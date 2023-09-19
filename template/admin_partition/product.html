@@ -99,6 +99,7 @@
                     </div>
                 </div>
             </header> <!-- card-header end// -->
+            {% for product in products %}
             <div class="card-body">
                 <article class="itemlist">
                     <div class="row align-items-center">
@@ -110,14 +111,14 @@
                         <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
                             <a class="itemside" href="#">
                                 <div class="left">
-                                    <img src="assets/imgs/items/1.jpg" class="img-sm img-thumbnail" alt="Item">
+                                    <img src='{{ product.product_images.url }}' class="img-sm img-thumbnail" alt="Item">
                                 </div>
                                 <div class="info">
-                                    <h6 class="mb-0">T-shirt for men medium size</h6>
+                                    <h6 class="mb-0">{{ product.product_name }}</h6>
                                 </div>
                             </a>
                         </div>
-                        <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>$34.50</span> </div>
+                        <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>₹{{product.offer_price}}</span> </div>
                         <div class="col-lg-2 col-sm-2 col-4 col-status">
                             <span class="badge rounded-pill alert-success">Active</span>
                         </div>
@@ -134,12 +135,15 @@
                         </div>
                     </div> <!-- row .// -->
                 </article> <!-- itemlist  .// -->
-                {% comment %} 
+                
+            </div> <!-- card-body end// -->
+            {% endfor %}
+
+            {% comment %} 
                 ! for that active place in form
                 <span class="badge rounded-pill alert-warning">Archived</span>
                 <span class="badge rounded-pill alert-danger">Disabled</span>
                 {% endcomment %}
-            </div> <!-- card-body end// -->
         </div> <!-- card end// -->
         <div class="pagination-area mt-30 mb-50">
             <nav aria-label="Page navigation example">
