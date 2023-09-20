@@ -26,13 +26,13 @@ def user_login(request):
       pass
    # only needed when you are doing email validation 
 
-   # try:
-   #    if Account.objects.filter(email=email,is_active=False).exists():
-            # messages.warning(request,'You have to active first ')
+   try:
+      if Account.objects.filter(email=email,is_active=False).exists():
+            messages.warning(request,'Your account is blocked ')
             # Account.objects.get(email=email,is_active=False).is_active=True
-            # return redirect('user_partition:userlogin')
-   # except:
-   #    pass
+            return redirect('user_partition:userlogin')
+   except:
+      pass
    
    user = authenticate(email=email,password=password)
    if user is None:
@@ -160,7 +160,6 @@ def email(request):
       return redirect("user_partition:potp")
    else:
       messages.error(request,'Invalid one')
-
    return render(request,'user_partition/user_authentication/email.html')
 
 def potp(request):
@@ -174,5 +173,3 @@ def potp(request):
       messages.warning(request,'Invalid otp')
       return redirect('user_partition:potp')
    
-def user_list(request):
-   pass

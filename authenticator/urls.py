@@ -11,5 +11,4 @@ urlpatterns = [
     path('forget_password/',views.forgetpassword,name='forgetpassword'),
     path('email/',views.email,name='email'),
     path('potp/',views.potp,name='potp'),
-    path('user_list',views.user_list,name='user_list')
 ]

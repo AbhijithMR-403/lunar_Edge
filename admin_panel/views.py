@@ -90,3 +90,34 @@ def add_product(request):
             return render(request,'admin_partition/addproduct.html',{'form':form})
 
     return render(request,'admin_partition/addproduct.html',{'form':form})
+
+
+def user_list(request):
+   user_details=Account.objects.all().filter(is_superuser=False)
+   content={
+       'user_details':user_details
+   }
+   return render(request,'admin_partition/user_list.html',content)
+
+
+def block_unblock_user(request,id,bl):
+    try:
+        user=Account.objects.get(id=id)
+        user.is_active = (bl == 1)
+        user.save()
+        print(user)
+        print('\n\n\n\njsjdklfaj\n\n\n')
+    except:
+        pass
+    return redirect('admin_panel:user_list')
+
+
+# def unblock(request,id):
+#     try:
+#         user=Account.objects.get(id=id)
+#         user.is_active=True
+#         user.save()
+#         print('\n\n\n\n22222222222222222222222j\n\n\n')
+#     except:
+#         pass
+#     return redirect('admin_panel:user_list')

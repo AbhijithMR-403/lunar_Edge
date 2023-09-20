@@ -100,6 +100,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for user in user_details %}
                             <tr>
                                 <td width="40%">
                                     <a href="#" class="itemside">
@@ -107,8 +108,8 @@
                                             <img src="assets/imgs/people/avatar1.jpg" class="img-sm img-avatar" alt="Userpic">
                                         </div>
                                         <div class="info pl-3">
-                                            <h6 class="mb-0 title">Eleanor Pena</h6>
-                                            <small class="text-muted">Seller ID: #439</small>
+                                            <h6 class="mb-0 title">{{user.username}}</h6>
+                                            <small class="text-muted">Seller ID: #{{ forloop.counter }}</small>
                                         </div>
                                     </a>
                                 </td>
@@ -116,10 +117,19 @@
                                 <td><span class="badge rounded-pill alert-success">Active</span></td>
                                 <td>08.07.2020</td>
                                 <td class="text-end">
-                                    <a href="#" class="btn btn-sm btn-brand rounded font-sm mt-15">View details</a>
+                                    <div class="dropdown">
+                                    <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item text-danger" href="{% url "admin_panel:block_unblock_user" id=user.id bl=0%}">Block</a>
+                                        <a class="dropdown-item" href="{% url "admin_panel:block_unblock_user" id=user.id bl=1%}">Unblock</a>
+                                        {% comment %} <a class="dropdown-item text-danger" href="#">Delete</a> {% endcomment %}
+                                    </div>
+                                </div>
+                                    {% comment %} <a href="#" class="btn btn-sm btn-brand rounded font-sm mt-15">View details</a> {% endcomment %}
                                 </td>
                             </tr>
-                            <tr>
+                            {% endfor %}
+                            {% comment %} <tr>
                                 <td width="40%">
                                     <a href="#" class="itemside">
                                         <div class="left">
@@ -289,7 +299,7 @@
                                 <td class="text-end">
                                     <a href="#" class="btn btn-sm btn-brand rounded font-sm mt-15">View details</a>
                                 </td>
-                            </tr>
+                            </tr> {% endcomment %}
                         </tbody>
                     </table> <!-- table-responsive.// -->
                 </div>
