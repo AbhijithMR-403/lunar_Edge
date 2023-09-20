@@ -23,10 +23,10 @@
 					<div class="card fat">
 						<div class="card-body">
 							<h4 class="card-title">Enter your Email</h4>
-							<form method="POST" class="my-login-validation" action={% url "user_partition:otp" %}  novalidate="">{% csrf_token %}
+							<form method="POST" class="my-login-validation" action={% url "user_partition:email" %}  novalidate="">{% csrf_token %}
 								<div class="form-group">
-									<label for="password">OTP
-										<a href={% url "user_partition:sent_otp" %} class="float-right">
+									<label for="password">Email
+										<a href={% url "user_partition:potp" %} class="float-right">
 											Login?
 										</a>
 									</label>

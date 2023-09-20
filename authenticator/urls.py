@@ -9,5 +9,7 @@ urlpatterns = [
     path('otp/',views.otp,name='otp'),
     path('sent_otp/',views.sent_otp,name='sent_otp'),
     path('forget_password/',views.forgetpassword,name='forgetpassword'),
-    path('email/',views.email,name='email')
+    path('email/',views.email,name='email'),
+    path('potp/',views.potp,name='potp'),
+    path('user_list',views.user_list,name='user_list')
 ]

@@ -4,9 +4,15 @@ from admin_panel.models import *
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from .forms import product_form
+from django.views.decorators.cache import cache_control
 
 # Create your views here.
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def dashboard(request):
+    # Later you can reduce this code
+    if not request.user.is_superuser:
+        return redirect('admin_panel:login')
     return render(request,'admin_partition/dashboard.html')
 
 def product_list(request):
@@ -17,9 +23,14 @@ def product_list(request):
     return render(request,'admin_partition/product.html',content)
 
 
+def logout_admin(request):
+    logout(request)
+    return redirect('admin_panel:login')
+
 def categories(request):
-    # if request.method == 'POST':
-        
+    
+    if not request.user.is_superuser:
+        return redirect('admin_panel:login')
     categories=Category.objects.all()
     content={
         'categories':categories
@@ -27,7 +38,15 @@ def categories(request):
     return render(request,'admin_partition/category.html',content)
 
 
+
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_login(request):
+    logout(request)
+    print(request.user,'\n\n\n\n')
+    if request.user.is_superuser:
+        print('\n\nsdfadfa\n\n\n')
+        redirect('admin_panel:dashboard')
     if request.method =='POST':
         email=request.POST['email']
         password=request.POST['password']
@@ -44,11 +63,12 @@ def admin_login(request):
             messages.error(request,'Invalid detailes')
             return redirect('admin_panel:login')
         else:
+            print(request.user,'\n\n\n\n\n\nabove this')
             if user.is_superuser:
                 login(request,user)
                 return redirect('admin_panel:dashboard')
             else:
-                messages.error('Only for superuser')
+                messages.error(request,'Only for superuser')
 
     return render(request,'admin_partition/sign_in/login.html')
 

@@ -1,3 +1,4 @@
+
 {% extends 'user_partition/user_authentication/base.html' %}
 {%load static %}
 {% block body %}
@@ -21,17 +22,15 @@
 
 					<div class="card fat">
 						<div class="card-body">
-							<h4 class="card-title">Re-enter your password</h4>
-							<form method="POST" class="my-login-validation" action={% url "user_partition:forgetpassword" %}  novalidate="">{% csrf_token %}
+							<h4 class="card-title">Verification</h4>
+							<form method="POST" class="my-login-validation" action={% url "user_partition:potp" %}  novalidate="">{% csrf_token %}
 								<div class="form-group">
-									<label for="password">Type password
+									<label for="password">OTP
+										<a href={% url "user_partition:potp" %} class="float-right">
+											Resend otp?
+										</a>
 									</label>
-									<input id="password" type="text" class="form-control" name="password" required data-eye>
-								</div>
-								<div class="form-group">
-									<label for="password">Confirm password
-									</label>
-									<input id="password" type="text" class="form-control" name="re_password" required data-eye>
+									<input id="password" type="number" class="form-control" name="otp" required data-eye>
 								</div>
 
 								<div class="form-group">
