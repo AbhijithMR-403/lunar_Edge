@@ -1,6 +1,6 @@
 
 {% extends 'user_partition/user_authentication/base.html' %}
-{% load static %}
+{%load static %}
 {% block body %}
 <body class="my-login-page">
 	<section class="h-100">
@@ -22,28 +22,16 @@
 
 					<div class="card fat">
 						<div class="card-body">
-							<h4 class="card-title">Login</h4>
-							<form method="POST" class="my-login-validation" action="/login/" novalidate="">{% csrf_token %}
+							<h4 class="card-title">Enter your Email</h4>
+							<form method="POST" class="my-login-validation" action={% url "user_partition:otp" %}  novalidate="">{% csrf_token %}
 								<div class="form-group">
-									<label for="email">Email</label>
-									<input id="email" type="name" class="form-control" name="email" value="" required autofocus>
-									<div class="invalid-feedback">
-										Email is invalid
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="password">Password
-										<a href='{% url "user_partition:email" %}' class="float-right">
-											Forgot Password?
+									<label for="password">OTP
+										<a href={% url "user_partition:sent_otp" %} class="float-right">
+											Login?
 										</a>
 									</label>
-									<input id="password" type="password" class="form-control" name="password" required data-eye>
-								    <div class="invalid-feedback">
-								    	Password is required
-							    	</div>
+									<input id="password" type="email" class="form-control" name="email" required data-eye>
 								</div>
-
 								<div class="form-group">
 									<div class="custom-checkbox custom-control">
 										<input type="checkbox" name="remember" id="remember" class="custom-control-input">
@@ -56,9 +44,9 @@
 										Login
 									</button>
 								</div>
-								<div class="mt-4 text-center">
-									Don't have an account? <a href="/signup">Create One</a>
-								</div>
+								{% comment %} <div class="mt-4 text-center">
+									Don't have an account? <a href="/sign_up">Create One</a>
+								</div> {% endcomment %}
 							</form>
 						</div>
 					</div>

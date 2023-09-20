@@ -7,7 +7,6 @@ import random
 
 # Create your views here.
 def user_login(request):
-   print('ajsdhfkjashdfkjhasjdfhkasdjhdfkj\n\n\n',request.method,'\nkjsdkfjaksdj\n\n\n')
    
    if request.user.is_authenticated:
       return redirect('user_home:home')
@@ -115,3 +114,8 @@ def user_signup(request):
    # Myuser.save()
    return redirect('user_partition:userlogin')
 
+def forgetpassword(request):
+   return render(request,'user_partition/user_authentication/forgetpassword.html')
+
+def email(request):
+   return render(request,'user_partition/authentication/email.html')

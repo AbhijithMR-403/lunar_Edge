@@ -11,7 +11,10 @@ def home_page(request):
    return render(request,'user_partition/user_page/home.html',content)
 
 def product_page(request):
-   return render(request,'user_partition/user_page/shop.html')
+   content ={
+      'products' : Product.objects.all()
+   }
+   return render(request,'user_partition/user_page/shop.html',content)
 
 def logout_user(request):
    logout(request)

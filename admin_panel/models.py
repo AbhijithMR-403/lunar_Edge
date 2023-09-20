@@ -5,7 +5,7 @@ from django.utils.text import slugify
 class Category(models.Model):
     category_name       = models.CharField(max_length=20, unique=True)
     slug                = models.SlugField(max_length=20,unique=False)
-    description         = models.TextField(max_length=500,blank= True)
+    description         = models.TextField(max_length=2000,blank= True)
     parent              = models.ForeignKey("Category", on_delete=models.CASCADE,null=True,blank=True)
     is_available        = models.BooleanField(default=True)
     soft_deleted        = models.BooleanField(default=False)
@@ -24,7 +24,7 @@ class Product(models.Model):
     slug = models.SlugField(max_length=500,unique=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     brand = models.CharField(max_length=200,blank=True)
-    description = models.TextField(max_length=500, blank=True)
+    description = models.TextField(max_length=2000, blank=True)
     price = models.IntegerField()
     offer_price = models.IntegerField(blank=True)
     quantity = models.IntegerField()

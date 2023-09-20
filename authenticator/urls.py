@@ -8,4 +8,6 @@ urlpatterns = [
     path('signup/',views.user_signup,name='usersignup'),
     path('otp/',views.otp,name='otp'),
     path('sent_otp/',views.sent_otp,name='sent_otp'),
+    path('forget_password/',views.forgetpassword,name='forgetpassword'),
+    path('email/',views.email,name='email')
 ]
