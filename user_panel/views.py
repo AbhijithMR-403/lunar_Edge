@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth import login,logout,authenticate
 from admin_panel.models import *
 # Create your views here.
@@ -19,3 +19,8 @@ def product_page(request):
 def logout_user(request):
    logout(request)
    return redirect('user_home:home')
+
+def product_details(request,id):
+   detail=Product.objects.get(id=id)
+
+   return render(request,'user_partition/user_page/product_detail.html',{'detail':detail})

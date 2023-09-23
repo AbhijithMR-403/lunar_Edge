@@ -137,7 +137,7 @@ def forgetpassword(request):
    else:
       user=Account.objects.get(email=request.session['pemail'])
       user.set_password(pass1)
-      # user.save()
+      user.save()
       return redirect('user_partition:userlogin')
 
 

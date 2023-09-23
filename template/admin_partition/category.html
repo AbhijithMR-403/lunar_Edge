@@ -70,26 +70,30 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-3">
-                        <form action="{% url 'admin_panel:add_categories' %}" method='POST'> {% csrf_token %}
+                        <form action="{% url 'admin_panel:add_categories' %}" method='POST' enctype="multipart/form-data"> {% csrf_token %}
                             <div class="mb-4">
                                 <label for="product_name" class="form-label">Name</label>
-                                <input type="text" placeholder="Type here" class="form-control" id="product_name" />
-                            </div>
-                            <div class="mb-4">
-                                <label for="product_slug" class="form-label">Slug</label>
-                                <input type="text" placeholder="Type here" class="form-control" id="product_slug" />
+                                <input type="text" placeholder="Type here" class="form-control" id="product_name" Name='product_name'/>
                             </div>
                             <div class="mb-4">
                                 <label class="form-label">Parent</label>
-                                <select class="form-select">
-                                    <option>Laptop</option>
-                                    <option>Accessories</option>
-                                    <option></option>
+                                <select class="form-select" name='parent'>
+                                    {% for category in categories %}
+                                    <option>{{category.category_name}}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                             <div class="mb-4">
                                 <label class="form-label">Description</label>
-                                <textarea placeholder="Type here" class="form-control"></textarea>
+                                <textarea placeholder="Type here" class="form-control" name='description'></textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-check-label" for="flexCheckDefault">Soft_delete</label>
+                                <input placeholder="Type here" class="form-check-input" type="checkbox" name='soft_delete' />
+                            </div>
+                            <div class="mb-4">
+                                <label for="formFile" class="form-label ">Default file input example</label>
+                                <input class="form-control" type="file" id="formFile" name='image'>
                             </div>
                             <div class="d-grid">
                                 <button class="btn btn-primary">Create category</button>
@@ -148,19 +152,5 @@
             </div> <!-- card body .// -->
         </div> <!-- card .// -->
     </section> <!-- content-main end// -->
-    <footer class="main-footer font-xs">
-        <div class="row pb-30 pt-15">
-            <div class="col-sm-6">
-                <script>
-                document.write(new Date().getFullYear())
-                </script> ©, Evara - HTML Ecommerce Template .
-            </div>
-            <div class="col-sm-6">
-                <div class="text-sm-end">
-                    All rights reserved
-                </div>
-            </div>
-        </div>
-    </footer>
 </main>
 {% endblock body %}

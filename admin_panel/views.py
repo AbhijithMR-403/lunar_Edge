@@ -6,8 +6,8 @@ from django.contrib.auth import login,logout,authenticate
 from .forms import product_form
 from django.views.decorators.cache import cache_control
 
-# Create your views here.
 
+# ^ Dashboard
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def dashboard(request):
     # Later you can reduce this code
@@ -15,6 +15,8 @@ def dashboard(request):
         return redirect('admin_panel:login')
     return render(request,'admin_partition/dashboard.html')
 
+
+# ^ List product
 def product_list(request):
     products=Product.objects.all()
     content={
@@ -23,10 +25,13 @@ def product_list(request):
     return render(request,'admin_partition/product.html',content)
 
 
+# ^ Logout
 def logout_admin(request):
     logout(request)
     return redirect('admin_panel:login')
 
+
+# ^ Category list
 def categories(request):
     
     if not request.user.is_superuser:
@@ -39,6 +44,7 @@ def categories(request):
 
 
 
+#  ^ admin login
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_login(request):
@@ -60,22 +66,44 @@ def admin_login(request):
     
         user = authenticate(email=email,password=password)
         if user is None:
-            messages.error(request,'Invalid detailes')
+            messages.warning(request,'Invalid detailes')
             return redirect('admin_panel:login')
         else:
-            print(request.user,'\n\n\n\n\n\nabove this')
             if user.is_superuser:
                 login(request,user)
                 return redirect('admin_panel:dashboard')
             else:
-                messages.error(request,'Only for superuser')
+                messages.warning(request,'Only for superuser')
 
     return render(request,'admin_partition/sign_in/login.html')
 
 
+
 def add_categories(request):
-    
+    if request.method != 'POST':
+        return redirect('admin_panel:categories')
+    name=request.POST['product_name']
+    parent=request.POST['parent']
+    description=request.POST['description']
+    soft_delete = (request.POST.get('soft_delete', False)) != False
+    image=None
+    if request.FILES:
+        image=request.FILES['image']
+    print(soft_delete,'\n\n\n\n\ndsfsdfd')
+    print(Category.objects.get(category_name=parent),'\n\n\n\n\ndsfsdfd')
+    category = Category.objects.create(category_name    = name,
+                                       parent           = Category.objects.get(category_name=parent),
+                                       description      = description,
+                                       soft_deleted     = soft_delete,
+                                       category_img     = image
+                                       )
+    category.save()
     return redirect('admin_panel:categories')
+
+
+
+
+
 
 def add_product(request):
     form=product_form
@@ -100,24 +128,11 @@ def user_list(request):
    return render(request,'admin_partition/user_list.html',content)
 
 
-def block_unblock_user(request,id,bl):
+def block_unblock_user(request,id,block):
     try:
         user=Account.objects.get(id=id)
-        user.is_active = (bl == 1)
+        user.is_active = (block == 1)
         user.save()
-        print(user)
-        print('\n\n\n\njsjdklfaj\n\n\n')
     except:
         pass
     return redirect('admin_panel:user_list')
-
-
-# def unblock(request,id):
-#     try:
-#         user=Account.objects.get(id=id)
-#         user.is_active=True
-#         user.save()
-#         print('\n\n\n\n22222222222222222222222j\n\n\n')
-#     except:
-#         pass
-#     return redirect('admin_panel:user_list')
