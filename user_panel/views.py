@@ -22,5 +22,4 @@ def logout_user(request):
 
 def product_details(request,id):
    detail=Product.objects.get(id=id)
-
    return render(request,'user_partition/user_page/product_detail.html',{'detail':detail})
