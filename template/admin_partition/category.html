@@ -16,17 +16,18 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-3">
-                        <form action="{% url 'admin_panel:add_categories' %}" method='POST' enctype="multipart/form-data"> {% csrf_token %}
+                        <form action="{% url 'category:add_categories' %}" method='POST' enctype="multipart/form-data"> {% csrf_token %}
                             <div class="mb-4">
                                 <label for="product_name" class="form-label">Name</label>
-                                <input type="text" placeholder="Type here" class="form-control" id="product_name" Name='product_name'/>
+                                <input type="text" placeholder="Type here" class="form-control" id="product_name" Name='category_name'/>
                             </div>
                             <div class="mb-4">
                                 <label class="form-label">Parent</label>
                                 <select class="form-select" name='parent'>
                                     {% for category in categories %}
-                                    <option>{{category.category_name}}</option>
+                                    <option value="{{category.category_name}}">{{category.category_name}}</option>
                                     {% endfor %}
+                                    <option value="None">None</option>
                                 </select>
                             </div>
                             <div class="mb-4">
@@ -72,7 +73,7 @@
                                                 <input class="form-check-input" type="checkbox" value="" />
                                             </div>
                                         </td>
-                                        <td>21</td>
+                                        <td>{{category.id}}</td>
                                         <td><b>{{category.category_name}}</b></td>
                                         <td>{{category.description}}</td>
                                         <td>{{category.slug}}</td>

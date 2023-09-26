@@ -3,7 +3,6 @@ from authenticator.models import Account
 from admin_panel.models import *
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
-from .forms import product_form
 from django.views.decorators.cache import cache_control
 
 
@@ -16,32 +15,10 @@ def dashboard(request):
     return render(request,'admin_partition/dashboard.html')
 
 
-# ^ List product
-def product_list(request):
-    products=Product.objects.all()
-    content={
-        'products':products
-    }
-    return render(request,'admin_partition/product.html',content)
-
-
 # ^ Logout
 def logout_admin(request):
     logout(request)
     return redirect('admin_panel:login')
-
-
-# ^ Category list
-def categories(request):
-    
-    if not request.user.is_superuser:
-        return redirect('admin_panel:login')
-    categories=Category.objects.all()
-    content={
-        'categories':categories
-    }
-    return render(request,'admin_partition/category.html',content)
-
 
 
 #  ^ admin login
@@ -77,47 +54,6 @@ def admin_login(request):
 
     return render(request,'admin_partition/sign_in/login.html')
 
-
-
-def add_categories(request):
-    if request.method != 'POST':
-        return redirect('admin_panel:categories')
-    name=request.POST['product_name']
-    parent=request.POST['parent']
-    description=request.POST['description']
-    soft_delete = (request.POST.get('soft_delete', False)) != False
-    image=None
-    if request.FILES:
-        image=request.FILES['image']
-    print(soft_delete,'\n\n\n\n\ndsfsdfd')
-    print(Category.objects.get(category_name=parent),'\n\n\n\n\ndsfsdfd')
-    category = Category.objects.create(category_name    = name,
-                                       parent           = Category.objects.get(category_name=parent),
-                                       description      = description,
-                                       soft_deleted     = soft_delete,
-                                       category_img     = image
-                                       )
-    category.save()
-    return redirect('admin_panel:categories')
-
-
-
-
-
-
-def add_product(request):
-    form=product_form
-    if request.method =="POST":
-        form=product_form(request.POST, request.FILES)
-        if form.is_valid():
-            product = form.save(commit=False)
-            print(product)
-            product.save()
-            return redirect('admin_panel:add_product')
-        else:
-            return render(request,'admin_partition/addproduct.html',{'form':form})
-
-    return render(request,'admin_partition/addproduct.html',{'form':form})
 
 
 def user_list(request):

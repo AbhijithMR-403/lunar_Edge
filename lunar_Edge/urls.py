@@ -23,6 +23,8 @@ urlpatterns = [
     path('',include('authenticator.urls')),
     path('',include('user_panel.urls')),
     path('admin/',include('admin_panel.urls')),
+    path('admin/',include('category_management.urls')),
+    path('admin/',include('product_management.urls')),
 ]
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL,

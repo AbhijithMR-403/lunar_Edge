@@ -45,10 +45,11 @@
                         <span class="text">Products</span>
                     </a>
                     <div class="submenu">
-                        <a href="{% url 'admin_panel:product_list' %}">Product List</a>
-                        {% comment %} <a href="page-products-grid.html">Product grid</a>
-                        <a href="page-products-grid-2.html">Product grid 2</a> {% endcomment %}
-                        <a href="{% url 'admin_panel:categories' %}">Categories</a>
+                        {% comment %} <a href="{% url 'product:product_list' %}">Product List</a> {% endcomment %}
+                        <a href="{% url 'category:category_list' %}">Categories</a>
+                        <a href="{% url 'product:add_brand' %}">Brand</a>
+                        <a href="{% url 'product:add_attribute' %}">Attibute</a>
+                        <a href="{% url 'product:add_attribute_value' %}">Attibute Values</a>
                     </div>
                 </li>
                 <li class="menu-item has-submenu">
