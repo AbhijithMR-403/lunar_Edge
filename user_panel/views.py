@@ -51,7 +51,7 @@ def add_to_cart(request,slug):
    product_object = Product_Variant.objects.get(product_variant_slug=slug)
    add_cart_item = Cart_item.objects.get_or_create(
       cart_id=cart_object[0],
-      product_id=product_object
+      product_id=product_object,
       )
    # if add_cart_item[1]:
    #    add_cart_item[0].quantity=0
@@ -60,3 +60,9 @@ def add_to_cart(request,slug):
    cart_object[0].total_price=product_object.sale_price
    print('\n\n\n',product_object,'\n\n\n')
    return redirect('user_home:user_cart')
+
+def profile(request):
+   context={
+      'user_details':Account.objects.get(email=request.user)
+   }
+   return render(request,'user_partition/user_page/profile.html',context)

@@ -84,7 +84,7 @@
                                                 <div class="dropdown-menu">
                                                     <a class="dropdown-item" href="#">View detail</a>
                                                     <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
+                                                    <a class="dropdown-item text-danger" href="{% url 'category:delete_category' slug=category.slug %}">Delete</a>
                                                 </div>
                                             </div> <!-- dropdown //end -->
                                         </td>

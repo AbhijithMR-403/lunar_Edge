@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from .models import Product,Product_Variant
 from .forms import product_form,brand_form,attribute_name_form,attribute_value_form,product_variant_form
+from django.contrib import messages
 # Create your views here.
 
 # ^ List product
@@ -80,3 +81,14 @@ def add_product_variant(request):
         else:
             return render(request,'admin_partition/addfield.html',{'form':form})
     return render(request,'admin_partition/addfield.html',{'form':form})
+
+
+# ^ Delete product 
+def delete_product(request,slug):
+    try:
+        product = Product_Variant.objects.get(product_variant_slug =slug)
+    except:
+        return redirect('product:product_list')
+    product.delete()
+    messages.error(request, "product Deleted ❌")
+    return redirect('product:product_list')

@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from .models import Category
+from django.contrib import messages
 # Create your views here.
 
 
@@ -30,4 +31,16 @@ def add_category(request):
         # soft_delete     = soft_delete,
         category_img    = image,
     )
+    return redirect('category:category_list')
+
+def delete_category(request,slug):
+    
+    try:
+        category = Category.objects.get(slug=slug)
+    # except User.DoesNotExist:
+    #     return redirect('admin-all-category')
+    except ValueError:
+        return redirect('category:category_list')
+    category.delete()
+    messages.error(request, "Category Deleted ❌")
     return redirect('category:category_list')

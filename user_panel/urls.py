@@ -1,4 +1,3 @@
-
 from django.urls import path
 from user_panel import views
 
@@ -11,4 +10,5 @@ urlpatterns = [
     path('product_details/<int:id>',views.product_details,name='product_details'),
     path('cart/',views.user_cart,name='user_cart'),
     path('add_to_cart/<str:slug>/',views.add_to_cart,name='add_to_cart'),
+    path('profile/',views.profile,name='user_profile')
 ]
