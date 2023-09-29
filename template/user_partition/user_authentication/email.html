@@ -1,6 +1,6 @@
 
 {% extends 'user_partition/user_authentication/base.html' %}
-{%load static %}
+{% load static %}
 {% block body %}
 <body class="my-login-page">
 	<section class="h-100">
@@ -26,7 +26,7 @@
 							<form method="POST" class="my-login-validation" action={% url "user_partition:email" %}  novalidate="">{% csrf_token %}
 								<div class="form-group">
 									<label for="password">Email
-										<a href={% url "user_partition:potp" %} class="float-right">
+										<a href={% url "user_partition:userlogin" %} class="float-right">
 											Login?
 										</a>
 									</label>

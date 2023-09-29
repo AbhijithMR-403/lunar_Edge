@@ -5,8 +5,6 @@ from .models import *
 class brand_form(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        
         self.fields['brand_name'].widget.attrs['class'] = ''
         self.fields['is_active'].widget.attrs['class'] = ''
     class Meta:
@@ -30,33 +28,37 @@ class attribute_value_form(forms.ModelForm):
 
 
 class product_form(forms.ModelForm):
-    pass
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
        
-    #     for field_name, field in self.fields.items():
-    #         field.widget.attrs['class'] = 'form-control'
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
         
-    #     self.fields['is_available'].widget.attrs['class'] = ''
-    #     self.fields['soft_deleted'].widget.attrs['class'] = ''
-    #     self.fields['category'].widget.attrs['class'] = 'form-select'
-    #     self.fields['product_images'].widget.attrs['class'] = ''
-    # class Meta:
-    #     model = Product
-    #     fields = ('product_name','category','brand','description', 'price','offer_price','quantity','is_available','soft_deleted','product_images',)
-       
+        # self.fields['is_available'].widget.attrs['class'] = ''
+        # self.fields['soft_deleted'].widget.attrs['class'] = ''
+        # self.fields['category'].widget.attrs['class'] = 'form-select'
+        # self.fields['product_images'].widget.attrs['class'] = ''
+    class Meta:
+        model = Product
+        fields = '__all__'
+        exclude = ['is_active','product_slug']
 
     #   ? example
        
-        # widgets = {
-        #     'product_name'      : forms.TextInput(attrs={'class':"form-control"}),
-        #     'category'          : forms.TextInput(attrs={'class':"form-control"}),
-        #     'brand'             : forms.TextInput(attrs={'class':"form-control"}),
-        #     'description'       : forms.TextInput(attrs={'class':"form-control"}),
-        #     'price'             : forms.TextInput(attrs={'class':"form-control"}),
-        #     'offer_price'       : forms.TextInput(attrs={'class':"form-control"}),
-        #     'quantity'          : forms.TextInput(attrs={'class':"form-control"}),
-        #     'is_available'      : forms.TextInput(attrs={'class':"form-control"}),
-        #     'soft_deleted'      : forms.TextInput(attrs={'class':"form-control"}),
-        #     'product_images'    : forms.TextInput(attrs={'class':"form-control"}),
-        # }
+
+
+class product_variant_form(forms.ModelForm):
+    class Meta:
+        model = Product_Variant
+        fields = '__all__'
+        exclude = ['is_active','product_variant_slug']
+
+        widgets = {
+            'product'        : forms.RadioSelect,
+            'model_id'       : forms.TextInput(attrs={'class':"form-control"}),
+            'attributes'     : forms.CheckboxSelectMultiple,
+            'sale_price'     : forms.TextInput(attrs={'class':"form-control"}),
+            'stock'          : forms.TextInput(attrs={'class':"form-control"}),
+            'thumbnail_image': forms.ClearableFileInput,
+            'max_price'      : forms.TextInput(attrs={'class':"form-control"}),
+        }

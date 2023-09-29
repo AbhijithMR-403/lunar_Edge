@@ -6,3 +6,4 @@ from .models import *
 admin.site.register(Brand)
 admin.site.register(Attribute)
 admin.site.register(Attribute_Value)
+admin.site.register(Product_Variant)

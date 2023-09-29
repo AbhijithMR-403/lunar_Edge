@@ -2,7 +2,16 @@
 {% block body %}
 <section class="content-main">
     <div class="content-header">
-
+        {% if form.errors %}
+<div class="alert alert-danger">
+    <strong>Form errors:</strong>
+    <ul>
+        {% for field, errors in form.errors.items %}
+        <li>{{ field }}: {{ errors }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
         <div>
             <h2 class="content-title card-title">Add Brand</h2>
             <p>Make sure the data are valid one</p>
@@ -16,7 +25,7 @@
     
     <div class="card">
         <div class="card-body">
-    <form action="" method="POST"> {% csrf_token %}
+    <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
         {{form.as_p}}
         <button type="submit" class="btn btn-primary">Add</button>
     </form>

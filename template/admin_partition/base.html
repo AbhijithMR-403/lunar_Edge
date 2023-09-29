@@ -45,11 +45,8 @@
                         <span class="text">Products</span>
                     </a>
                     <div class="submenu">
-                        {% comment %} <a href="{% url 'product:product_list' %}">Product List</a> {% endcomment %}
                         <a href="{% url 'category:category_list' %}">Categories</a>
-                        <a href="{% url 'product:add_brand' %}">Brand</a>
-                        <a href="{% url 'product:add_attribute' %}">Attibute</a>
-                        <a href="{% url 'product:add_attribute_value' %}">Attibute Values</a>
+                        <a href="{% url 'product:product_list' %}">Product List</a>
                     </div>
                 </li>
                 <li class="menu-item has-submenu">
@@ -74,13 +71,14 @@
                 </li>
                 <li class="menu-item has-submenu">
                     <a class="menu-link" href="page-form-product-1.html"> <i class="icon material-icons md-add_box"></i>
-                        <span class="text">Add product</span>
+                        <span class="text">Product variant</span>
                     </a>
                     <div class="submenu">
-                        <a href="page-form-product-1.html">Add product 1</a>
-                        <a href="page-form-product-2.html">Add product 2</a>
-                        <a href="page-form-product-3.html">Add product 3</a>
-                        <a href="page-form-product-4.html">Add product 4</a>
+                        <a href="{% url 'product:add_brand' %}">Brand</a>
+                        <a href="{% url 'product:add_attribute' %}">Attibute</a>
+                        <a href="{% url 'product:add_attribute_value' %}">Attibute Values</a>
+                        <a href="{% url "product:add_product" %}">Add Product </a>
+                        <a href="{% url "product:add_product_variant" %}">Add Product Variant </a>
                     </div>
                 </li>
                 <li class="menu-item has-submenu">

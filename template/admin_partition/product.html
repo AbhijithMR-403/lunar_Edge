@@ -13,7 +13,7 @@
             <div>
                 <a href="#" class="btn btn-light rounded font-md">Export</a>
                 <a href="#" class="btn btn-light rounded  font-md">Import</a>
-                <a href={% url "product:add_product" %} class="btn btn-primary btn-sm rounded">Create new</a>
+                <a href={% url "product:add_product_variant" %} class="btn btn-primary btn-sm rounded">Create new</a>
             </div>
         </div>
         <div class="card mb-4">
@@ -57,19 +57,19 @@
                         <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
                             <a class="itemside" href="#">
                                 <div class="left">
-                                    <img src='{{ product.product_images.url }}' class="img-sm img-thumbnail" alt="Item">
+                                    <img src='{{ product.thumbnail_image.url }}' class="img-sm img-thumbnail" alt="Item">
                                 </div>
                                 <div class="info">
-                                    <h6 class="mb-0">{{ product.product_name }}</h6>
+                                    <h6 class="mb-0">{{ product.product.product_name}}</h6>
                                 </div>
                             </a>
                         </div>
-                        <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>₹{{product.offer_price}}</span> </div>
+                        <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>₹{{product.max_price}}</span> </div>
                         <div class="col-lg-2 col-sm-2 col-4 col-status">
                             <span class="badge rounded-pill alert-success">Active</span>
                         </div>
                         <div class="col-lg-1 col-sm-2 col-4 col-date">
-                            <span>{{product.quantity}}</span>
+                            <span>{{product.stock }}</span>
                         </div>
                         <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
                             <a href="#" class="btn btn-sm font-sm rounded btn-brand">
