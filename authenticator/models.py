@@ -18,7 +18,7 @@ class AccountManager(BaseUserManager):
             last_name=last_name,
         )
         # change when email verificartion addedd
-        user.is_active=True
+        user.is_active=False
         
         user.set_password(password)
         user.save(using=self._db)
@@ -69,4 +69,5 @@ class Account(AbstractBaseUser):
         return True
 
 
-    
+class Profile_details(models.Model):
+    pass

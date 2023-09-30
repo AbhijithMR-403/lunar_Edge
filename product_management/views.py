@@ -75,7 +75,7 @@ def add_product_variant(request):
         print(form)
         if form.is_valid():
             product = form.save()
-            # print(product)
+            print(product)
             # product.save_m2m()
             return redirect('product:add_product_variant')
         else:

@@ -7,7 +7,6 @@ from product_management.models import *
 
 class Cart(models.Model):
     cart_id         = models.CharField(blank=True)
-    total_price     = models.IntegerField(default=0)
     created_date    = models.DateField(auto_now_add=True)
     
 class Cart_item(models.Model):
