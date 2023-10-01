@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from .models import Product,Product_Variant
 from .forms import product_form,brand_form,attribute_name_form,attribute_value_form,product_variant_form
 from django.contrib import messages
@@ -92,3 +92,16 @@ def delete_product(request,slug):
     product.delete()
     messages.error(request, "product Deleted ❌")
     return redirect('product:product_list')
+
+# ^ Edit product
+def edit_product(request,slug):
+    products = Product_Variant.objects.get(product_variant_slug=slug)
+    if request.method == 'POST':
+        form = product_variant_form(request.POST, request.FILES,instance=products)
+        if form.is_valid():
+            form.save()
+        else:
+            return render(request,'admin_partition/addfield.html',{'form':form})
+    form = product_variant_form(instance = products)
+
+    return render(request,'admin_partition/addfield.html',{'form':form})

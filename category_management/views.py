@@ -37,8 +37,6 @@ def delete_category(request,slug):
     
     try:
         category = Category.objects.get(slug=slug)
-    # except User.DoesNotExist:
-    #     return redirect('admin-all-category')
     except ValueError:
         return redirect('category:category_list')
     category.delete()

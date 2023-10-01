@@ -25,15 +25,29 @@ def logout_user(request):
    logout(request)
    return redirect('user_home:home')
 
-def product_details(request,id):
-   detail=Product_Variant.objects.get(id=id)
-   return render(request,'user_partition/user_page/product_detail.html',{'detail':detail})
+def product_details(request,slug):
+   single_product_variant = Product_Variant.objects.select_related('product').prefetch_related('attributes').get(
+                            product_variant_slug=slug,
+                            is_active=True)
+   print(single_product_variant)
+   print('\n*************\n')
+   
+   samp=single_product_variant.attributes.get(attribute=2).id
+   # print(Attribute_Value.objects.filter(attributes=samp))
+   # print(Product_Variant.objects.select_related('product').filter(product=single_product_variant.product))
+   variants =Product_Variant.objects.select_related('product').filter(product=single_product_variant.product)
+   detail=Product_Variant.objects.get(product_variant_slug=slug)
+   print(variants)
+   context={
+      'variants': variants,
+      'detail':detail,
+   }
+   return render(request,'user_partition/user_page/product_detail.html',context)
 
 
 
 
 def profile(request):
-   
    context={
       'user_details':Account.objects.get(email=request.user)
    }

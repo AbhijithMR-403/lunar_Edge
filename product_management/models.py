@@ -20,12 +20,12 @@ class Attribute(models.Model):
     
 # Attribute Value - RED,BLUE, 4GB, 8GB, 128GB , SSD , HDD
 class Attribute_Value(models.Model):
-    attribute = models.ForeignKey(Attribute,on_delete=models.CASCADE)
-    attribute_value = models.CharField(max_length=50,unique=True)
-    is_active = models.BooleanField(default=True)
+    attribute               = models.ForeignKey(Attribute,on_delete=models.CASCADE)
+    attribute_value         = models.CharField(max_length=50,unique=True)
+    is_active               = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.attribute_value}-{self.attribute.attribute_name}"
+        return f"{self.attribute_value} {self.attribute.attribute_name}"
 
 class Product(models.Model):
     product_name            = models.CharField(max_length=49)

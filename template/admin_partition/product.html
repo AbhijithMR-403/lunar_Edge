@@ -72,7 +72,7 @@
                             <span>{{product.stock }}</span>
                         </div>
                         <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                            <a href="#" class="btn btn-sm font-sm rounded btn-brand">
+                            <a href="{% url 'product:edit_product' slug=product.product_variant_slug %}" class="btn btn-sm font-sm rounded btn-brand">
                                 <i class="material-icons md-edit"></i> Edit
                             </a>
                             <a href="{% url 'product:delete_product' slug=product.product_variant_slug %}" class="btn btn-sm font-sm btn-light rounded">

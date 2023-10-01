@@ -40,9 +40,9 @@ def user_login(request):
       return redirect('user_partition:userlogin')
    else:
       
-      request.session['email']=email
-
-      return redirect('user_partition:sent_otp')
+      login(request,user)
+      return redirect('user_home:home')
+   # !till above line
       
 
 def sent_otp(request):
@@ -67,8 +67,9 @@ def otp(request):
       if str(request.session['OTP_Key']) != str(request.POST['otp']):
          messages.warning(request,'Check your otp again')
          print(request.session['OTP_Key'],request.POST['otp'])
-         user.is_active=False
       else:
+         user.is_active=True
+         user.save()
          login(request,user)
          return redirect('user_home:home')
    return render(request,'user_partition/user_authentication/otp.html')
@@ -124,7 +125,9 @@ def user_signup(request):
  
    Myuser=Account.objects.create_user(username=username,email=email,password=password1)
    # Myuser.save()
-   return redirect('user_partition:userlogin')
+   
+   request.session['email']=email
+   return redirect('user_partition:sent_otp')
 
 def forgetpassword(request):
    if request.method != 'POST':

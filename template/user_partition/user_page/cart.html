@@ -22,7 +22,7 @@
                         <tr>
                             
                             <td class="align-middle"><img src="img/product-1.jpg" alt="" style="width: 50px;"> 
-                                <a href='{% url "user_home:product_details" id=item.product_id.id %}'>
+                                <a href='{% url "user_home:product_details" slug=item.product_id.id %}'>
                                 {{item.product_id.product.product_name}}
                             </a>
                             </td>
@@ -43,10 +43,8 @@
                                 </div>
                             </td>
                             <td class="align-middle"></td>
-                                <td class="align-middle"><button class="btn btn-sm btn-danger" href='{% url "user_home:product_details" id=item.product_id.id %}'>
-                                        <i class="fa fa-times">
-                                            
-                                        </i>
+                                <td class="align-middle"><button class="btn btn-sm btn-danger" href=''>
+                                        <i class="fa fa-times"></i>
                                 </button></td>
                         </tr>
                         {% endfor %}

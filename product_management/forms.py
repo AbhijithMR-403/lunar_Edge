@@ -33,15 +33,12 @@ class product_form(forms.ModelForm):
        
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
+        self.fields['is_active'].widget.attrs['class']=''
         
-        # self.fields['is_available'].widget.attrs['class'] = ''
-        # self.fields['soft_deleted'].widget.attrs['class'] = ''
-        # self.fields['category'].widget.attrs['class'] = 'form-select'
-        # self.fields['product_images'].widget.attrs['class'] = ''
     class Meta:
         model = Product
         fields = '__all__'
-        exclude = ['is_active','product_slug']
+        exclude = ['product_slug']
 
     #   ? example
        

@@ -141,7 +141,7 @@
                             {% comment %} <a class="btn btn-outline-dark btn-square" href="{% url "user_home:cart_counter" id=product.id %}"><i class="fa fa-shopping-cart"></i></a> {% endcomment %}
                             <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
                             <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href="{% url "user_home:product_details" id=product.id %}"><i class="fa fa-search"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href='{% url "user_home:product_details" slug=product.product_variant_slug %}'><i class="fa fa-search"></i></a>
                         </div>
                     </div>
                     <div class="text-center py-4">
