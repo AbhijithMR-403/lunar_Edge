@@ -18,6 +18,9 @@
                         </tr>
                     </thead>
                     <tbody class="align-middle">
+                        {% if cart_items is None %}
+                        <h2>You Cart is empty</h2>
+                        {% endif %}
                         {% for item in cart_items %}
                         <tr>
                             
@@ -31,20 +34,25 @@
                                 <div class="input-group quantity mx-auto" style="width: 100px;">
                                     <div class="input-group-btn">
                                         <button class="btn btn-sm btn-warning-emphasis btn-minus" >
-                                            <i class="fa fa-minus"></i>
+                                            <a href="{% url 'user_home:minus_cart' slug=item.product_id.product_variant_slug %}">
+                                                <i class="fa fa-minus"></i></a>
                                         </button>
                                     </div>
                                     <input type="text" class="form-control form-control-sm bg-white-50 border-0 text-center" value=" {{item.quantity}} ">
                                     <div class="input-group-btn">
                                         <button class="btn btn-sm btn-warning-emphasis btn-plus">
+                                            <a href="{% url 'user_home:plus_cart' slug=item.product_id.product_variant_slug %}">
                                             <i class="fa fa-plus"></i>
+                                        </a>
                                         </button>
                                     </div>
                                 </div>
                             </td>
                             <td class="align-middle"></td>
-                                <td class="align-middle"><button class="btn btn-sm btn-danger" href=''>
-                                        <i class="fa fa-times"></i>
+                            <td class="align-middle"><button class="btn btn-sm btn-danger">
+                                    <a class='text-dark text-decoration-none' href={% url "user_home:delete_cart_item" id=item.id %}>
+                                    <i class="fa fa-times"></i>
+                                </a>
                                 </button></td>
                         </tr>
                         {% endfor %}
@@ -80,17 +88,17 @@
                     <div class="border-bottom pb-2">
                         <div class="d-flex justify-content-between mb-3">
                             <h6>Subtotal</h6>
-                            <h6>$150</h6>
+                            <h6>₹{{ subtotal }}</h6>
                         </div>
                         <div class="d-flex justify-content-between">
                             <h6 class="font-weight-medium">Shipping</h6>
-                            <h6 class="font-weight-medium">$10</h6>
+                            <h6 class="font-weight-medium">₹100</h6>
                         </div>
                     </div>
                     <div class="pt-2">
                         <div class="d-flex justify-content-between mt-2">
                             <h5>Total</h5>
-                            <h5>$160</h5>
+                            <h5>₹{{total}}</h5>
                         </div>
                         <a href='{% url "user_home:checkout" %}'>
                             <button href='' class="btn btn-block btn-info font-weight-bold my-3 py-3">Proceed To Checkout</button>

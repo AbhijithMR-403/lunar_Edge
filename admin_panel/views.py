@@ -56,15 +56,22 @@ def admin_login(request):
 
 
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def user_list(request):
-   user_details=Account.objects.all().filter(is_superuser=False)
-   content={
+    if not request.user.is_superuser:
+        return redirect('admin_panel:login')
+    user_details=Account.objects.all().filter(is_superuser=False)
+    content={
        'user_details':user_details
-   }
-   return render(request,'admin_partition/user_list.html',content)
+    }
+    return render(request,'admin_partition/user_list.html',content)
 
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def block_unblock_user(request,id,block):
+    if not request.user.is_superuser:
+        return redirect('admin_panel:login')
+
     try:
         user=Account.objects.get(id=id)
         user.is_active = (block == 1)

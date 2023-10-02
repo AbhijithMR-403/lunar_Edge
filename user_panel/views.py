@@ -1,137 +1,132 @@
-from django.shortcuts import render,redirect,HttpResponse
-from django.contrib.auth import login,logout,authenticate
-from category_management.models import *
-from product_management.models import *
-from .models import *
+from django.shortcuts import render, redirect, HttpResponse
+from django.contrib.auth import logout
+from category_management.models import Category
+from product_management.models import Product_Variant
+from authenticator.models import Account
+from .models import Cart, Cart_item
 from django.contrib import messages
-import uuid
-
+from django.http import HttpResponseRedirect
 
 
 def home_page(request):
-   content = {
-      'products':Product_Variant.objects.all(),
-      'categories':Category.objects.all(),
-      }
-   return render(request,'user_partition/user_page/home.html',content)
+    content = {
+        'products': Product_Variant.objects.all(),
+        'categories': Category.objects.all(),
+    }
+    return render(request, 'user_partition/user_page/home.html', content)
+
 
 def product_page(request):
-   content ={
-      'products' : Product_Variant.objects.all()
-   }
-   return render(request,'user_partition/user_page/shop.html',content)
+    content = {
+        'products': Product_Variant.objects.all()
+    }
+    return render(request, 'user_partition/user_page/shop.html', content)
+
 
 def logout_user(request):
-   logout(request)
-   return redirect('user_home:home')
-
-def product_details(request,slug):
-   single_product_variant = Product_Variant.objects.select_related('product').prefetch_related('attributes').get(
-                            product_variant_slug=slug,
-                            is_active=True)
-   print(single_product_variant)
-   print('\n*************\n')
-   
-   samp=single_product_variant.attributes.get(attribute=2).id
-   # print(Attribute_Value.objects.filter(attributes=samp))
-   # print(Product_Variant.objects.select_related('product').filter(product=single_product_variant.product))
-   variants =Product_Variant.objects.select_related('product').filter(product=single_product_variant.product)
-   detail=Product_Variant.objects.get(product_variant_slug=slug)
-   print(variants)
-   context={
-      'variants': variants,
-      'detail':detail,
-   }
-   return render(request,'user_partition/user_page/product_detail.html',context)
+    logout(request)
+    return redirect('user_home:home')
 
 
+def product_details(request, slug):
+    single_product_variant = Product_Variant.objects.select_related(
+        'product').prefetch_related('attributes').get(
+        product_variant_slug=slug, is_active=True)
+    variants = Product_Variant.objects.select_related(
+        'product').filter(product=single_product_variant.product)
+    detail = Product_Variant.objects.get(product_variant_slug=slug)
+    context = {
+        'variants': variants,
+        'detail': detail,
+    }
+    return render(request, 'user_partition/user_page/product_detail.html',
+                  context)
 
 
 def profile(request):
-   context={
-      'user_details':Account.objects.get(email=request.user)
-   }
-   return render(request,'user_partition/user_page/profile.html',context)
-
-
-#to get the cart id if present
-def _cart_id(request):
-    if not request.session['cart']:
-       request.session['cart']=uuid.uuid4
-    return request.session.session_key or request.session['cart']
-
-def user_cart(request,total=0,quantity=0,cart_items=None):
-    total_with_orginal_price =0
-    try:
-        if request.user.is_authenticated:
-            cart_items = Cart_item.objects.filter(user=request.user,is_active=True)
-        else:
-            cart = Cart.objects.get(cart_id=_cart_id(request))
-            cart_items = Cart_item.objects.filter(cart=cart,is_active=True)
-    except:
-        pass
-
     context = {
-      #   'total':total,
-        'quantity':quantity,
-        'cart_items':cart_items,
-      #   'total_with_orginal_price':total_with_orginal_price
+        'user_details': Account.objects.get(email=request.user)
     }
-    return render(request,'user_partition/user_page/cart.html',context)
+    return render(request, 'user_partition/user_page/profile.html', context)
 
+
+def user_cart(request, slug=None):
+    print(request.session.create())
+    if not request.user.is_authenticated:
+        messages.warning(request, 'You needs to login first')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    user_cart, check_user_cart = Cart.objects.get_or_create(user=request.user)
+
+    cart_items = Cart_item.objects.filter(cart_id=user_cart)
+    subtotal = sum(i.product_id.sale_price * i.quantity for i in cart_items)
+    context = {
+        'cart_items': cart_items,
+        'subtotal': subtotal,
+        'total': subtotal+100,
+    }
+
+    return render(request, 'user_partition/user_page/cart.html', context)
 
 
 # ! haven't finished
 
 
-def add_to_cart(request,id):
-    
-    current_user = request.user
-    product = Product_Variant.objects.get(id=id)    #get the product
-    #if user authenticated
-    cart,check = Cart.objects.get_or_create(cart_id=_cart_id(request))      
-    if current_user.is_authenticated:
-      try:
-         cart_item = Cart_item.objects.get(product_id=product , user=current_user)
-         cart_item.quantity +=1
-         cart_item.save()
-      except Cart_item.DoesNotExist:
-         cart_item = Cart_item.objects.create(
-               product_id=product,
-               user=current_user,
-               cart_id=cart,
-               quantity = 1,
-         )
-         cart_item.save()
-      return redirect('user_home:user_cart')
-        
-    else:
-        
-    # ===CART CREATED ===
-      # cart = Cart.objects.get_or_create(cart_id=_cart_id(request))
+def add_to_cart(request, id):
+    if not request.user.is_authenticated:
+        messages.warning(request, 'You needs to login first')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    user_cart, check = Cart.objects.get_or_create(user=request.user)
+    product = Product_Variant.objects.get(id=id)
+    cart_item, check_cart_item = Cart_item.objects.get_or_create(
+        product_id=product, cart_id=user_cart)
+    cart_item.quantity += 1
+    cart_item.save()
 
-
-      # ===Product saved to cart item
-      try:
-         cart_item = Cart_item.objects.get(product=product , cart=cart)
-         cart_item.quantity +=1
-         cart_item.save()
-      except Cart_item.DoesNotExist:
-         cart_item = Cart_item.objects.create(
-               product=product,
-               cart=cart,
-               quantity = 1,
-         )
-         cart_item.save()
-      return redirect('user_home:user_cart')
-
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def checkout(request):
-   # print(Cart.cart_id.values(),request.session.session_key)
-   cart_id=Cart.objects.get(cart_id=request.session.session_key)
-   cart_details = Cart_item.objects.select_related('cart_id').filter(cart_id=cart_id)
-   context ={
-       'cart_details':cart_details
+    cart_id = Cart.objects.get(user=request.user)
+    cart_details = Cart_item.objects.select_related(
+        'cart_id').filter(cart_id=cart_id)
+    subtotal = sum(i.product_id.sale_price * i.quantity for i in cart_details)
+    context = {
+        'total': subtotal+100,
+        'subtotal': subtotal,
+        'cart_details': cart_details
     }
-   return render(request,'user_partition/user_page/checkout.html',context)
+    return render(request, 'user_partition/user_page/checkout.html', context)
+
+
+def delete_cart_item(request, id):
+    cart_item = Cart_item.objects.get(id=id)
+    cart_item.delete()
+    return redirect('user_home:user_cart')
+
+
+def order(request):
+    cart_user = Cart.objects.get(user=request.user)
+    cart_item = Cart_item.objects.filter(cart_id=cart_user)
+    cart_item.delete()
+    return HttpResponse('Your order is now placed')
+
+
+def plus_cart(request, slug):
+    cart_user = Cart.objects.get(user=request.user)
+    product = Product_Variant.objects.get(product_variant_slug=slug)
+    cart_item = Cart_item.objects.get(cart_id=cart_user, product_id=product)
+    cart_item.quantity += 1
+    cart_item.save()
+    return redirect('user_home:user_cart')
+
+
+def minus_cart(request, slug):
+    cart_user = Cart.objects.get(user=request.user)
+    product = Product_Variant.objects.get(product_variant_slug=slug)
+    cart_item = Cart_item.objects.get(cart_id=cart_user, product_id=product)
+    if cart_item.quantity != 1:
+        cart_item.quantity -= 1
+        cart_item.save()
+    else:
+        cart_item.delete()
+    return redirect('user_home:user_cart')
