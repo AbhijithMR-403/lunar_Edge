@@ -20,10 +20,10 @@ def categories(request):
 
 def add_category(request):
     category_name = request.POST['category_name']
-    parent = None if request.POST['parent'] == 'None' else Category.objects.get(
+    parent = None if request.POST['parent']=='None' else Category.objects.get(
         category_name=request.POST['parent'])
     description = request.POST['description']
-    soft_delete = request.POST.get('soft_delete', False) != False
+    # soft_delete = request.POST.get('soft_delete', False) != False
     image = request.FILES['image']
 
     Category.objects.create(

@@ -70,4 +70,4 @@ class Account(AbstractBaseUser):
 
 
 class Profile_details(models.Model):
-    pass
+    profile_img = models.ImageField(upload_to='user/profile')

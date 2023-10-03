@@ -62,46 +62,49 @@
             <div class="card-body">
               <div class="row">
                 <div class="col-sm-3">
-                  <p class="mb-0">Full Name</p>
+                  <p class="mb-0 form-control-plaintext">Full Name</p>
                 </div>
                 <div class="col-sm-9">
-                  <p class="text-muted mb-0">Your first name</p>
+                  <input class="text-muted form-control-plaintext" type="text" value='Your first name'>
+                  {% comment %} <p class="text-muted mb-0">Your first name</p> {% endcomment %}
                 </div>
               </div>
               <hr>
               <div class="row">
                 <div class="col-sm-3">
-                  <p class="mb-0">Email</p>
+                  <p class="mb-0 form-control-plaintext">Email</p>
                 </div>
                 <div class="col-sm-9">
-                  <p class="text-muted mb-0">{{user_details.email}}</p>
+                  <input class="text-muted form-control-plaintext" type="text" value='{{user_details.email}}'>
                 </div>
               </div>
               <hr>
               <div class="row">
                 <div class="col-sm-3">
-                  <p class="mb-0">Phone</p>
+                  <p class="mb-0 form-control-plaintext">Phone</p>
                 </div>
                 <div class="col-sm-9">
-                  <p class="text-muted mb-0">(097) 234-5678</p>
+                  <input class="text-muted form-control-plaintext" type="text" value='(097) 234-5678'>
+                  <p class="text-muted mb-0"></p>
                 </div>
               </div>
               <hr>
               <div class="row">
                 <div class="col-sm-3">
-                  <p class="mb-0">Mobile</p>
+                  <p class="mb-0 form-control-plaintext">Mobile</p>
                 </div>
                 <div class="col-sm-9">
-                  <p class="text-muted mb-0">(098) 765-4321</p>
+                  <input class="text-muted form-control-plaintext" type="text" value='{{user_details.email}}'>
                 </div>
               </div>
               <hr>
               <div class="row">
                 <div class="col-sm-3">
-                  <p class="mb-0">Address</p>
+                  <p class="mb-0 form-control-plaintext">Address</p>
                 </div>
                 <div class="col-sm-9">
-                  <p class="text-muted mb-0">Bay Area, San Francisco, CA</p>
+                  <input class="text-muted form-control-plaintext" type="text" value='{{user_details.email}}'>
+
                 </div>
               </div>
             </div>
