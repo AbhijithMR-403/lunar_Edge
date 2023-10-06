@@ -2,10 +2,10 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth import logout
 from category_management.models import Category
 from product_management.models import Product_Variant
-from authenticator.models import Account
+from authenticator.models import Account, user_profile
 from .models import Cart, Cart_item
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 
 
 def home_page(request):
@@ -44,12 +44,27 @@ def product_details(request, slug):
 
 
 def profile(request):
-    context = {"user_details": Account.objects.get(email=request.user)}
+    try:
+        user = Account.objects.get(email=request.user)
+        user_extra_details, check_created = user_profile.objects.get_or_create(account=user)
+    except Exception:
+        return redirect('user_home:home')
+    if request.method == 'POST':
+        field_name = request.POST['name']
+        value = request.POST['value']
+        print(value)
+        print(field_name)
+        # user_data = Account.objects.get(email=request.user)
+        setattr(user_extra_details, field_name, value)
+        user_extra_details.save()
+    context = {
+        "user_details": user,
+        "user_extra_details": user_extra_details
+        }
     return render(request, "user_partition/user_page/profile.html", context)
 
 
 def user_cart(request, slug=None):
-    print(request.session.create())
     if not request.user.is_authenticated:
         messages.warning(request, "You needs to login first")
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
@@ -63,7 +78,7 @@ def user_cart(request, slug=None):
         "total": subtotal + 100,
     }
 
-    return render(request, "user_partition/user_page/cart.html", context)
+    return render(request, "user_partition/order/cart.html", context)
 
 
 # ! haven't finished
@@ -94,7 +109,7 @@ def checkout(request):
         "subtotal": subtotal,
         "cart_details": cart_details,
     }
-    return render(request, "user_partition/user_page/checkout.html", context)
+    return render(request, "user_partition/order/checkout.html", context)
 
 
 def delete_cart_item(request, id):

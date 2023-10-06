@@ -60,11 +60,12 @@ class Product(models.Model):
 class Product_Variant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     model_id = models.CharField(max_length=30)
+    description = models.TextField(max_length=1000)
     attributes = models.ManyToManyField(
         Attribute_Value,
         related_name='attributes')
-    max_price = models.DecimalField(max_digits=8, decimal_places=2)
-    sale_price = models.DecimalField(max_digits=8, decimal_places=2)
+    max_price = models.DecimalField(max_digits=10, decimal_places=2)
+    sale_price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField()
     product_variant_slug = models.SlugField(unique=True,
                                             blank=True,
