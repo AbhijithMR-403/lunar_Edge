@@ -2,7 +2,16 @@
 
 {% block body %}
 <div class="container">
-    
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <strong>Form errors:</strong>
+        <ul>
+            {% for field, errors in form.errors.items %}
+            <li>{{ field }}: {{ errors }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
     </div>
 <!-- Checkout Start -->
 <div class="container-fluid">
@@ -28,13 +37,12 @@
                                 {{address.country}},
                                 {{address.pincode}}
                                 
-                                
                             </p>
                             {% if not address.is_default %}
-                            <a class="btn btn-success my-2" href="{% url 'default_address' address.id %}">Make Default</a>
+                            <a class="btn btn-success my-2" href="{% url 'order:default_address' address.id %}">Make Default</a>
                             
                             {% endif %}
-                            <a class="text-danger" href="{% url 'address_delete' address.id %}">
+                            <a class="text-danger" href="{% url 'order:delete_address' address.id %}">
                                 <p>
                                     Delete
                                 </p>
@@ -50,35 +58,35 @@
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label>Name</label>
-                        <input class="form-control" type="text" placeholder="John">
+                        <input class="form-control" type="text" name="name" placeholder="John">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>Mobile No</label>
-                        <input class="form-control" type="text" placeholder="+123 456 789">
+                        <input class="form-control" name="phone" type="text" placeholder="+123 456 789">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>Address Line 1</label>
-                        <input class="form-control" type="text" placeholder="123 Street">
+                        <input class="form-control" name="address_line_1" type="text" placeholder="123 Street">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>Address Line 2</label>
-                        <input class="form-control" type="text" placeholder="123 Street">
+                        <input class="form-control" name="address_line_2" type="text" placeholder="123 Street">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>Country</label>
-                        <input class="form-control" type="text" placeholder="India">
+                        <input class="form-control" name="country" type="text" placeholder="India">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>City</label>
-                        <input class="form-control" type="text" placeholder="New York">
+                        <input class="form-control" name="city" type="text" placeholder="New York">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>State</label>
-                        <input class="form-control" type="text" placeholder="New York">
+                        <input class="form-control" name="state" type="text" placeholder="New York">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>ZIP Code</label>
-                        <input class="form-control" type="text" placeholder="123">
+                        <input class="form-control" name="pincode" type="text" placeholder="123">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">
@@ -117,28 +125,30 @@
                 </div>
             </div>
             <div class="mb-5">
+                <form action="{% url "order:place_order" %}" method="post"> {% csrf_token %}
                 <h5 class="section-title position-relative text-uppercase mb-3"><span class="pr-3">Payment</span></h5>
                 <div class="bg-light p-30">
                     <div class="form-group">
                         <div class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" name="payment" id="paypal">
-                            <label class="custom-control-label" for="paypal">Paypal</label>
+                            <input type="radio" class="custom-control-input" name="payment" id="paypal" value="Razor_pay" required>
+                            <label class="custom-control-label" for="paypal">Razor pay</label>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" name="payment" id="directcheck">
-                            <label class="custom-control-label" for="directcheck">Direct Check</label>
+                            <input type="radio" class="custom-control-input" name="payment" id="directcheck" value="COD" required>
+                            <label class="custom-control-label" for="directcheck">COD</label>
                         </div>
                     </div>
                     <div class="form-group mb-4">
                         <div class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" name="payment" id="banktransfer">
+                            <input type="radio" class="custom-control-input" name="payment" id="banktransfer" value="banktransfer" required>
                             <label class="custom-control-label" for="banktransfer">Bank Transfer</label>
                         </div>
                     </div>
                     <button class="btn btn-block btn-primary font-weight-bold py-3">Place Order</button>
                 </div>
+            </form>
             </div>
         </div>
     </div>

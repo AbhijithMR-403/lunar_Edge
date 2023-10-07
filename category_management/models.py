@@ -12,7 +12,7 @@ class Category(models.Model):
     is_available = models.BooleanField(default=True)
     soft_deleted = models.BooleanField(default=False)
     category_img = models.ImageField(upload_to='categories')
-    
+
     class Meta:
         verbose_name = 'category'
         verbose_name_plural = 'categories'

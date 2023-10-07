@@ -99,19 +99,6 @@ def add_to_cart(request, id):
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
-def checkout(request):
-    cart_id = Cart.objects.get(user=request.user)
-    cart_details = Cart_item.objects.select_related(
-        "cart_id").filter(cart_id=cart_id)
-    subtotal = sum(i.product_id.sale_price * i.quantity for i in cart_details)
-    context = {
-        "total": subtotal + 100,
-        "subtotal": subtotal,
-        "cart_details": cart_details,
-    }
-    return render(request, "user_partition/order/checkout.html", context)
-
-
 def delete_cart_item(request, id):
     cart_item = Cart_item.objects.get(id=id)
     cart_item.delete()

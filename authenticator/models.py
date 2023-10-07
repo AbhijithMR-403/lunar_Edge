@@ -68,12 +68,12 @@ class user_profile(models.Model):
         on_delete=models.CASCADE,
         primary_key=True,
     )
-    full_name = models.CharField(max_length=50, null=True, blank=True)
+    full_name = models.CharField(max_length=50, blank=True, default='')
     phone_number = models.CharField(max_length=50, default='0000000000')
     profile_img = models.ImageField(
         upload_to="user/profile", blank=True, null=True)
     nationality = models.CharField(max_length=50, null=True)
-    DOB = models.DateField(null=True)
+    DOB = models.DateField(blank=True, null=True)
 
 
 class AddressBook(models.Model):
