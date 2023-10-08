@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "category_management",
     "product_management",
     "order",
+    "order_details_admin",
 ]
 
 MIDDLEWARE = [

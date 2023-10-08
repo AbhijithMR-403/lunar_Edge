@@ -99,10 +99,10 @@ class AddressBook(models.Model):
         super(AddressBook, self).save(*args, **kwargs)
 
     def get_user_full_address(self):
-        address_parts = [self.name, self.phone, self.address_line_1]
+        address_parts = [self.address_line_1]
         if self.address_line_2:
             address_parts.append(self.address_line_2)
-        address_parts.append(f'<b>Pin: {self.pincode}</b>')
+        address_parts.append(self.pincode)
         address_parts.extend([self.city, self.state, self.country])
         return ', '.join(address_parts)
 

@@ -45,7 +45,6 @@
                         <span class="text">Products</span>
                     </a>
                     <div class="submenu">
-                        <a href="{% url 'category:category_list' %}">Categories</a>
                         <a href="{% url 'product:product_list' %}">Product List</a>
                     </div>
                 </li>
@@ -54,20 +53,19 @@
                         <span class="text">Orders</span>
                     </a>
                     <div class="submenu">
-                        <a href="page-orders-1.html">Order list 1</a>
-                        <a href="page-orders-2.html">Order list 2</a>
-                        <a href="page-orders-detail.html">Order detail</a>
+                        <a href="{% url "admin_order:order_list" %}">Order list</a>
+                        {% comment %} <a href="{% url "admin_order:order_details" %}">Order detail</a> {% endcomment %}
                     </div>
                 </li>
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-sellers-cards.html"> <i class="icon material-icons md-store"></i>
-                        <span class="text">User</span>
+                <li class="menu-item">
+                    <a class="menu-link" href="{% url 'category:category_list' %}"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Categories</span>
                     </a>
-                    <div class="submenu">
-                        <a href="page-sellers-cards.html">Sellers cards</a>
-                        <a href="{% url 'admin_panel:user_list' %}">User list</a>
-                        <a href="page-seller-detail.html">Seller profile</a>
-                    </div>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="{% url 'admin_panel:user_list' %}"> <i class="icon material-icons md-store"></i>
+                        <span class="text">User list</span>
+                    </a>
                 </li>
                 <li class="menu-item has-submenu">
                     <a class="menu-link" href="page-form-product-1.html"> <i class="icon material-icons md-add_box"></i>

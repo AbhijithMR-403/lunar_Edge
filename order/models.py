@@ -1,6 +1,5 @@
 from django.db import models
 from authenticator.models import Account, AddressBook
-from product_management.models import Product
 from product_management.models import Product_Variant
 # Create your models here.
 
@@ -26,7 +25,7 @@ class Payment(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     payment_id = models.CharField(max_length=100, null=True, blank=True)
     payment_order_id = models.CharField(max_length=100, null=True, blank=True)
-    payment_signature = models.CharField(max_length=100, null=True, blank=True)
+    # payment_signature = models.CharField(max_length=100, null=True, blank=True)
     payment_method = models.CharField(choices=PaymentMethod, max_length=100)
     amount_paid = models.CharField(max_length=30)
     payment_status = models.CharField(
@@ -51,13 +50,13 @@ class Order(models.Model):
     order_number = models.CharField(max_length=100)
     shipping_address = models.ForeignKey(
         AddressBook, on_delete=models.SET_NULL, null=True)
-    additional_discount = models.IntegerField(default=0, null=True)
-    wallet_discount = models.IntegerField(default=0, null=True)
-    order_note = models.CharField(max_length=100, blank=True, null=True)
+    # additional_discount = models.IntegerField(default=0, null=True)
+    # wallet_discount = models.IntegerField(default=0, null=True)
+    # order_note = models.CharField(max_length=100, blank=True, null=True)
+    # ip = models.CharField(max_length=50, blank=True)
     order_total = models.DecimalField(max_digits=12, decimal_places=2)
     order_status = models.CharField(
         choices=ORDER_STATUS_CHOICES, max_length=20, default='New')
-    ip = models.CharField(max_length=50, blank=True)
     is_ordered = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -79,4 +78,3 @@ class OrderProduct(models.Model):
 
     def __str__(self):
         return str(self.order)
-

@@ -71,6 +71,11 @@ def user_cart(request, slug=None):
     user_cart, check_user_cart = Cart.objects.get_or_create(user=request.user)
 
     cart_items = Cart_item.objects.filter(cart_id=user_cart)
+    # ^ Check any item added to cart
+    # & Else return to previous page
+    if cart_items.count() == 0:
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
     subtotal = sum(i.product_id.sale_price * i.quantity for i in cart_items)
     context = {
         "cart_items": cart_items,
@@ -117,6 +122,8 @@ def plus_cart(request, slug):
     product = Product_Variant.objects.get(product_variant_slug=slug)
     cart_item = Cart_item.objects.get(cart_id=cart_user, product_id=product)
     cart_item.quantity += 1
+    
+    print('reach here akdsfajkdhfakjfjhdfj\n\n\\n\n')
     cart_item.save()
     return redirect("user_home:user_cart")
 
