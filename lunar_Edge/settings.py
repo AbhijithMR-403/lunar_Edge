@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "product_management",
     "order",
     "order_details_admin",
+    "user_profile",
 ]
 
 MIDDLEWARE = [
@@ -148,3 +149,8 @@ EMAIL_PORT = "587"
 EMAIL_HOST_USER = "abhijithmr581@gmail.com"
 EMAIL_HOST_PASSWORD = "ucll kgil ycln qxve"
 EMAIL_USE_TLS = True
+
+
+# Razor pay
+KEY = 'rzp_test_amAFuSg9hjXZsy'
+SECRET = 'vPGT1EQRxftdaYuDdI1305Tr'

@@ -61,7 +61,7 @@ def profile(request):
         "user_details": user,
         "user_extra_details": user_extra_details
         }
-    return render(request, "user_partition/user_page/profile.html", context)
+    return render(request, "user_partition/profile/profile.html", context)
 
 
 def user_cart(request, slug=None):
@@ -138,3 +138,13 @@ def minus_cart(request, slug):
     else:
         cart_item.delete()
     return redirect("user_home:user_cart")
+
+
+def address(request):
+    return render(request, 'user_partition/profile/address.html')
+
+
+def wallet(request):
+    pass
+
+

@@ -1,0 +1,160 @@
+{% extends "user_partition/profile/profilebase.html" %}
+
+{% block content %}
+<div class="col-lg-8">
+  <div class="card mb-4">
+    <div class="card-body text-center">
+      <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+        class="rounded-circle img-fluid" style="width: 150px;">
+      <h5 class="my-3">{{user_details.username}}</h5>
+      <p class="text-muted mb-1">Customer</p>
+      <p class="text-muted mb-4">kochi,kerala,india</p>
+      <div class="d-flex justify-content-center mb-2">
+        <button type="button" class="btn btn-danger">Delete Account</button>
+        <button type="button" class="btn btn-outline-primary ms-1">Message us</button>
+      </div>
+    </div>
+  </div>
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-3">
+          <p class="mb-0 form-control-plaintext">Full Name</p>
+        </div>
+        <div class="col-sm-9">
+          <input id='full_name' class="text-muted form-control-plaintext" type="text" value='{{user_extra_details.full_name}}'> {% csrf_token %}
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <p class="mb-0 form-control-plaintext">Email</p>
+        </div>
+        <div class="col-sm-9">
+          <input class="text-muted form-control-plaintext" type="text" value='{{user_details.email}}'>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <p class="mb-0 form-control-plaintext">Phone</p>
+        </div>
+        <div class="col-sm-9">
+          <input id='phone_number' class="text-muted form-control-plaintext" type="text" value='{{user_extra_details.phone_number}}'>
+          <p class="text-muted mb-0"></p>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <p class="mb-0 form-control-plaintext">DOB</p>
+        </div>
+        <div class="col-sm-9">
+          <i>{{user_extra_details.DOB}} </i>
+          <input id="DOB" class="text-muted form-control-plaintext col-md-3" placeholder="sdd"  type="date" value='{{user_extra_details.DOB}}'>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <p class="mb-0 form-control-plaintext">Address</p>
+        </div>
+        <div class="col-sm-9">
+          <input class="text-muted form-control-plaintext" type="text" value='{{user_details.email}}'>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card mb-4 mb-md-0">
+        <div class="card-body">
+          <p class="mb-4"><span class="text-primary font-italic me-1">Order</span> Placed
+          </p>
+          <script>
+              $('#full_name').blur(update_profile);
+              $('#phone_number').blur(update_profile);
+              $('#DOB').blur(update_profile);
+              function update_profile() {
+                //e.preventDefault()
+                console.log('this get here man')
+                value = $(this).val();
+                console.log(full_name)
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                console.log(csrftoken)
+                $.ajax({
+                  method: "POST",
+                  url: '{% url "user_home:user_profile" %}',
+                  headers: {'X-CSRFToken': csrftoken},
+                  data: {
+                    'name':this.id,
+                    'value': value,
+                  }
+                });
+              }
+          </script>
+          {% comment %} <p class="mb-1" style="font-size: .77rem;">Web Design</p>
+          <div class="progress rounded" style="height: 5px;">
+            <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
+              aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <p class="mt-4 mb-1" style="font-size: .77rem;">Website Markup</p>
+          <div class="progress rounded" style="height: 5px;">
+            <div class="progress-bar" role="progressbar" style="width: 72%" aria-valuenow="72"
+              aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <p class="mt-4 mb-1" style="font-size: .77rem;">One Page</p>
+          <div class="progress rounded" style="height: 5px;">
+            <div class="progress-bar" role="progressbar" style="width: 89%" aria-valuenow="89"
+              aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <p class="mt-4 mb-1" style="font-size: .77rem;">Mobile Template</p>
+          <div class="progress rounded" style="height: 5px;">
+            <div class="progress-bar" role="progressbar" style="width: 55%" aria-valuenow="55"
+              aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <p class="mt-4 mb-1" style="font-size: .77rem;">Backend API</p>
+            <div class="progress rounded mb-2" style="height: 5px;">
+              <div class="progress-bar" role="progressbar" style="width: 66%" aria-valuenow="66"
+              aria-valuemin="0" aria-valuemax="100"></div>
+            </div> {% endcomment %}
+          </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card mb-4 mb-md-0">
+        <div class="card-body">
+          <p class="mb-4"><span class="text-primary font-italic me-1">WishList</span> ❤️
+          </p>
+          {% comment %} <p class="mb-1" style="font-size: .77rem;">Web Design</p>
+          <div class="progress rounded" style="height: 5px;">
+            <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
+              aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <p class="mt-4 mb-1" style="font-size: .77rem;">Website Markup</p>
+            <div class="progress rounded" style="height: 5px;">
+            <div class="progress-bar" role="progressbar" style="width: 72%" aria-valuenow="72"
+            aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <p class="mt-4 mb-1" style="font-size: .77rem;">One Page</p>
+          <div class="progress rounded" style="height: 5px;">
+            <div class="progress-bar" role="progressbar" style="width: 89%" aria-valuenow="89"
+              aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <p class="mt-4 mb-1" style="font-size: .77rem;">Mobile Template</p>
+          <div class="progress rounded" style="height: 5px;">
+            <div class="progress-bar" role="progressbar" style="width: 55%" aria-valuenow="55"
+              aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <p class="mt-4 mb-1" style="font-size: .77rem;">Backend API</p>
+          <div class="progress rounded mb-2" style="height: 5px;">
+            <div class="progress-bar" role="progressbar" style="width: 66%" aria-valuenow="66"
+              aria-valuemin="0" aria-valuemax="100"></div>
+          </div> {% endcomment %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

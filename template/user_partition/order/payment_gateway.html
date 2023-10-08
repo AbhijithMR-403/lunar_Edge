@@ -1,0 +1,158 @@
+{% extends "user_partition/order/base.html" %}
+{% block body %}
+<main class="main">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html" rel="nofollow">Home</a>
+                <span></span> Shop
+                <span></span> Your Cart
+            </div>
+        </div>
+    </div>
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <h3 class="text-center mb-10">Review Your Order And Make Payment</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <h5 class="card-header">Billing Address</h5>
+                        <div class="card-body">
+                          <p class="card-text lh-sm">{{address.user}},</p>
+                          <p class="card-text lh-sm">{{address.address_line_1}}, {{address.city}}, {{address.state}},</p>   
+                          <p class="card-text lh-sm">{{address.country}},</p>
+                          <p class="card-text lh-sm">{{address.user.email}},</p>
+                          <p class="card-text lh-sm">{{address.phone}}.</p>
+                          {% if order.order_note %}
+                            <b>Order Note:</b>{{order.order_note}}
+                          {% endif %}  
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h5 class="card-header">Payment Mode</h5>
+                        <div class="card-body">
+                          <p class="card-text">{{payment_method.payment_method}}</p>  
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h5 class="card-header">Review Products</h5>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">Product</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for cart_item in cart_items %}
+                                    <tr>
+                                        <td class="image product-thumbnail"><img src="{{cart_item.product.product_images.url }}" alt="#"></td>
+                                        <td>
+                                            <h5><a href="shop-product-full.html">{{cart_item.product.product_name}}</a></h5> <span class="product-qty">x {{cart_item.quantity}}</span>
+                                            <p class="font-xs">
+                                                {% if cart_item.variations.all %}
+                                                {% for item in cart_item.variations.all %}
+                                                    {{item.variation_category | capfirst}} : {{item.variation_value | capfirst}}<br>
+                                                {% endfor %}
+                                                {% endif %}
+                                            </p>
+                                        </td>
+                                        <td>${{cart_item.sub_total}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table> 
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <!-- Cart Total -->
+                    <div class="border p-md-4 p-30 border-radius cart-totals">
+                        <div class="heading_s1 mb-3">
+                            <h4>Cart Totals</h4>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td class="cart_total_label">Cart Subtotal</td>
+                                        <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">${{total}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cart_total_label">Shipping</td>
+                                        <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cart_total_label">Total</td>
+                                        <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand">${{total}}</span></strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
+                            {% comment %} <img class="wow fadeIn animated" style='max-width:30%' src="{% static 'assets/imgs/theme/payment-method.png' %}" alt=""> {% endcomment %}
+                        </div>
+                        {% if payment_method.payment_method == 'razorpay' %}
+                        <button id="rzp-button1">Pay with Razorpay</button>
+                        {% else %}
+                        <button id="cod-button1">Proceed with COD</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    document.getElementById('cod-button1').onclick = function(e){
+        window.location.href = `http://127.0.0.1:8000/success?order_id={{payment_method.payment_order_id}}`
+    }
+
+</script>
+
+
+<script>
+    var options = {
+        "key": "rzp_test_amAFuSg9hjXZsy", // Enter the Key ID generated from the Dashboard
+        "amount": {{payment_method.amount_paid}}*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "lunar_edge",
+        "description": "Purchases",
+        "image": "https://example.com/your_logo",
+        "order_id": "{{payment.payment_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "handler": function (response){
+            // alert(response.razorpay_payment_id);
+            // alert(response.razorpay_order_id);
+            // alert(response.razorpay_signature)
+            console.log(response)
+            window.location.href = `http://127.0.0.1:8000/success?order_id={{payment_method.payment_order_id}}&method=RAZORPAY&payment_id=${response.razorpay_payment_id}&payment_order_id=${response.razorpay_order_id}`
+        },
+
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    });
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+    </script>
+
+{% endblock body %}

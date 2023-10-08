@@ -1,0 +1,64 @@
+{% extends "user_partition/user_page/base.html" %}
+
+{% block body %}
+<section style="background-color: #eee;">
+    <div class="container py-2">
+      <div class="row">
+        <div class="col">
+          <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+            <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="#">User</a></li>
+              <li class="breadcrumb-item active" aria-current="page">User Profile</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="card mb-4 mb-lg-0">
+            <div class="card-body p-0">
+              <ul class="list-group list-group-flush rounded-3">
+                <a class="text-decoration-none" href="{% url "user_home:user_profile" %}">
+                  <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                    {% comment %} <i class="fas fa-globe fa-lg text-warning"></i> {% endcomment %}
+                    <p class="mb-0 text-center">Profile</p>
+                  </li>
+                </a>
+                <a class='text-decoration-none' href="">
+                  <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                    {% comment %} <i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i> {% endcomment %}
+                    <p class="mb-0">Addresses</p>
+                  </li>
+                </a>
+                <a class='text-decoration-none' href="">
+
+                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                  {% comment %} <i class="fab fa-github fa-lg" style="color: #333333;"></i> {% endcomment %}
+                  <p class="mb-0">Wallet</p>
+                </li>
+              </a>
+                <a class='text-decoration-none' href="">
+                  <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                  {% comment %} <i class="fab fa-twitter fa-lg" style="color: #55acee;"></i> {% endcomment %}
+                  <p class="mb-0">Wishlist</p>
+                </li>
+              </a>
+                <a class='text-decoration-none' href="">
+                  <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                  {% comment %} <i class="fab fa-instagram fa-lg" style="color: #ac2bac;"></i> {% endcomment %}
+                  <p class="mb-0">Orders</p>
+                </li>
+              </a>
+              </ul>
+            </div>
+          </div>
+        </div>
+        {% block content %}
+        
+        {% endblock content %}
+      </div>
+    </div>
+  </section>
+  {% endblock body %}
