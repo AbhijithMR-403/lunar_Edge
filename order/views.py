@@ -98,7 +98,7 @@ def cash_on_delivery(request):
     cart_items = Cart_item.objects.select_related('cart_id').filter(
         cart_id__user=request.user)
     order_id = request.session['cart_id']
-    user = Account.objects.get(email=request.user)
+    user = Account.objects.get(email=request.user.username)
 
     # ^ Payment table
     payment_object = Payment.objects.get(payment_order_id=order_id)

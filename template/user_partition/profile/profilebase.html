@@ -20,32 +20,32 @@
           <div class="card mb-4 mb-lg-0">
             <div class="card-body p-0">
               <ul class="list-group list-group-flush rounded-3">
-                <a class="text-decoration-none" href="{% url "user_home:user_profile" %}">
+                <a class="text-decoration-none" href="{% url "user_profile:profile" %}">
                   <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                     {% comment %} <i class="fas fa-globe fa-lg text-warning"></i> {% endcomment %}
                     <p class="mb-0 text-center">Profile</p>
                   </li>
                 </a>
-                <a class='text-decoration-none' href="">
+                <a class='text-decoration-none' href="{% url "user_profile:address" %}">
                   <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                     {% comment %} <i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i> {% endcomment %}
                     <p class="mb-0">Addresses</p>
                   </li>
                 </a>
-                <a class='text-decoration-none' href="">
+                <a class='text-decoration-none' href="{% url "user_profile:wallet" %}">
 
                 <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                   {% comment %} <i class="fab fa-github fa-lg" style="color: #333333;"></i> {% endcomment %}
                   <p class="mb-0">Wallet</p>
                 </li>
               </a>
-                <a class='text-decoration-none' href="">
+                <a class='text-decoration-none' href="{% url "user_profile:wishlist" %}">
                   <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                   {% comment %} <i class="fab fa-twitter fa-lg" style="color: #55acee;"></i> {% endcomment %}
                   <p class="mb-0">Wishlist</p>
                 </li>
               </a>
-                <a class='text-decoration-none' href="">
+                <a class='text-decoration-none' href="{% url "user_profile:order" %}">
                   <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                   {% comment %} <i class="fab fa-instagram fa-lg" style="color: #ac2bac;"></i> {% endcomment %}
                   <p class="mb-0">Orders</p>

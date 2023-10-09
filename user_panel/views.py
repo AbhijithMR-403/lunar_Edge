@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth import logout
 from category_management.models import Category
 from product_management.models import Product_Variant
-from authenticator.models import Account, user_profile
 from .models import Cart, Cart_item
 from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
@@ -41,27 +40,6 @@ def product_details(request, slug):
         "detail": detail,
     }
     return render(request, "user_partition/user_page/product_detail.html", context)
-
-
-def profile(request):
-    try:
-        user = Account.objects.get(email=request.user)
-        user_extra_details, check_created = user_profile.objects.get_or_create(account=user)
-    except Exception:
-        return redirect('user_home:home')
-    if request.method == 'POST':
-        field_name = request.POST['name']
-        value = request.POST['value']
-        print(value)
-        print(field_name)
-        # user_data = Account.objects.get(email=request.user)
-        setattr(user_extra_details, field_name, value)
-        user_extra_details.save()
-    context = {
-        "user_details": user,
-        "user_extra_details": user_extra_details
-        }
-    return render(request, "user_partition/profile/profile.html", context)
 
 
 def user_cart(request, slug=None):
@@ -138,13 +116,3 @@ def minus_cart(request, slug):
     else:
         cart_item.delete()
     return redirect("user_home:user_cart")
-
-
-def address(request):
-    return render(request, 'user_partition/profile/address.html')
-
-
-def wallet(request):
-    pass
-
-

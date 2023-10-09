@@ -85,7 +85,7 @@
                 console.log(csrftoken)
                 $.ajax({
                   method: "POST",
-                  url: '{% url "user_home:user_profile" %}',
+                  url: '{% url "user_profile:profile" %}',
                   headers: {'X-CSRFToken': csrftoken},
                   data: {
                     'name':this.id,

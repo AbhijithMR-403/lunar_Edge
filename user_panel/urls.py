@@ -11,7 +11,7 @@ urlpatterns = [
          views.product_details, name='product_details'),
     path('cart/', views.user_cart, name='user_cart'),
     path('add_to_cart/<int:id>/', views.add_to_cart, name='add_to_cart'),
-    path('profile/', views.profile, name='user_profile'),
+#     path('profile/', views.profile, name='user_profile'),
     path('delete_cart_item/<int:id>/',
          views.delete_cart_item, name='delete_cart_item'),
     path('order/', views.order, name='order'),

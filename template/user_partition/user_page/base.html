@@ -50,7 +50,7 @@
                         <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">My Account</button>
                         <div class="dropdown-menu dropdown-menu-right">
                             {% if user.is_authenticated %}
-                            <a href="{% url "user_home:user_profile" %}">
+                            <a href="{% url "user_profile:profile" %}">
                                 <button class="dropdown-item" type="button" href="/">{{user.username}}</button>
                             </a>
                             <a href="/logout_user">
