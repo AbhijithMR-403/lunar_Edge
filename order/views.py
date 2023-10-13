@@ -21,9 +21,6 @@ def add_address(request):
             address.user = request.user
             address.save()
         else:
-            print(form.errors)
-            print(form.data)
-            print(form.cleaned_data)
             print(form.non_field_errors())
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
@@ -98,7 +95,7 @@ def cash_on_delivery(request):
     cart_items = Cart_item.objects.select_related('cart_id').filter(
         cart_id__user=request.user)
     order_id = request.session['cart_id']
-    user = Account.objects.get(email=request.user.username)
+    user = Account.objects.get(email=request.user)
 
     # ^ Payment table
     payment_object = Payment.objects.get(payment_order_id=order_id)
@@ -118,9 +115,10 @@ def cash_on_delivery(request):
             quantity=quantity, product_price=price
             )
         ordered_product.save()
-    Cart.objects.get(user=user).delete()
-
-    return HttpResponse('you have succesfully make cash on delivery')
+    cart = Cart.objects.get(user=user)
+    print(cart, '\n\n\n\n\n')
+    cart.delete()
+    return redirect('order:order_success')
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -131,8 +129,6 @@ def payment_gateway(request):
     payment_method = Payment.objects.get(payment_order_id=order_id)
     if payment_method.payment_status == 'SUCCESS':
         return redirect("user_home:home")
-
-        
 
     Total_amount = float(payment_method.amount_paid)
     # ^ Razor pay
@@ -162,10 +158,12 @@ def success(request):
     # status.payment_status = 'success'
     # status.save()
     # print(status)
-    cart_items = Cart_item.objects.select_related('cart_id').filter(
-        cart_id__user=request.user)
-    order_id = request.GET['order_id']
     user = Account.objects.get(email=request.user)
+    # cart_items = Cart_item.objects.select_related('cart_id').filter(
+    #     cart_id__user=user)
+    cart_items = Cart_item.objects.filter(cart_id=user)
+    print(cart_items)
+    order_id = request.GET['order_id']
 
     # ^ Payment table
     payment_object = Payment.objects.get(payment_order_id=order_id)
@@ -177,6 +175,7 @@ def success(request):
     order_object.order_status = 'Accepted'
     order_object.save()
     for cart_item in cart_items:
+        print(cart_item)
         quantity = cart_item.quantity
         product = cart_item.product_id
         price = cart_item.product_id.sale_price
@@ -185,5 +184,11 @@ def success(request):
             quantity=quantity, product_price=price
             )
         ordered_product.save()
+    print("\n\n\n\n\n\n\n\n\n\n\n\n")
+    print('dsafjdfkjfkj', Cart.objects.filter(user=user))
     Cart.objects.get(user=user).delete()
-    return HttpResponse('mission completed')
+    return redirect('order:order_success')
+
+
+def order_success(request):
+    return render(request, 'user_partition/order/order_success.html')

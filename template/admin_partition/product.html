@@ -13,7 +13,7 @@
             <div>
                 <a href="#" class="btn btn-light rounded font-md">Export</a>
                 <a href="#" class="btn btn-light rounded  font-md">Import</a>
-                <a href={% url "product:add_product_variant" %} class="btn btn-primary btn-sm rounded">Create new</a>
+                <a href={% url "product:add_product" %} class="btn btn-primary btn-sm rounded">Create new</a>
             </div>
         </div>
         <div class="card mb-4">
@@ -55,27 +55,27 @@
                             </div>
                         </div>
                         <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
-                            <a class="itemside" href="#">
+                            <a class="itemside" href="{% url 'product:add_product_variant' slug=product.product_slug %}">
                                 <div class="left">
                                     <img src='{{ product.thumbnail_image.url }}' class="img-sm img-thumbnail" alt="Item">
                                 </div>
                                 <div class="info">
-                                    <h6 class="mb-0">{{ product.product.product_name}}</h6>
+                                    <h6 class="mb-0">{{ product.product_name}}</h6>
                                 </div>
                             </a>
                         </div>
-                        <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>₹{{product.max_price}}</span> </div>
+                        <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>{{product.product_catg}}</span> </div>
                         <div class="col-lg-2 col-sm-2 col-4 col-status">
                             <span class="badge rounded-pill alert-success">Active</span>
                         </div>
                         <div class="col-lg-1 col-sm-2 col-4 col-date">
-                            <span>{{product.stock }}</span>
+                            <span>{{product.product_brand }}</span>
                         </div>
                         <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                            <a href="{% url 'product:edit_product' slug=product.product_variant_slug %}" class="btn btn-sm font-sm rounded btn-brand">
+                            <a href="{% url 'product:edit_product' slug=product.product_slug %}" class="btn btn-sm font-sm rounded btn-brand">
                                 <i class="material-icons md-edit"></i> Edit
                             </a>
-                            <a href="{% url 'product:delete_product' slug=product.product_variant_slug %}" class="btn btn-sm font-sm btn-light rounded">
+                            <a href="{% url 'product:delete_product' slug=product.product_slug %}" class="btn btn-sm font-sm btn-light rounded">
                                 <i class="material-icons md-delete_forever"></i> Delete
                             </a>
                         </div>

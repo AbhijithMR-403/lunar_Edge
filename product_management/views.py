@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Product_Variant
+from .models import Product_Variant, Product
 from .forms import product_form, brand_form, attribute_name_form
 from .forms import attribute_value_form, product_variant_form
 from django.contrib import messages
@@ -8,7 +8,7 @@ from django.contrib import messages
 # ^ List product
 def product_list(request):
     content = {
-        'products': Product_Variant.objects.all()
+        'products': Product.objects.all()
     }
     return render(request, 'admin_partition/product.html', content)
 
@@ -70,8 +70,11 @@ def add_attribute_value(request):
 
 
 # ^ Add product variant
-def add_product_variant(request):
+def add_product_variant(request, slug):
+    print(Product.objects.get(product_slug=slug))
     form = product_variant_form
+    form.product = Product.objects.get(product_slug=slug)
+    print(type(form))
     if request.method == 'POST':
 
         form = product_variant_form(request.POST, request.FILES)
@@ -79,16 +82,20 @@ def add_product_variant(request):
         if not form.is_valid():
             return render(request, 'admin_partition/addfield.html',
                           {'form': form})
-        product = form.save()
-        print(product)
-        return redirect('product:add_product_variant')
+        product_variant = form.save(commit=False)
+        product_variant.product = Product.objects.get(product_slug=slug)
+        print(product_variant.product)
+        # product = form.save()
+        # print()
+        product_variant.save()
+        return redirect('product:product_list')
     return render(request, 'admin_partition/addfield.html', {'form': form})
 
 
 # ^ Delete product
 def delete_product(request, slug):
     try:
-        product = Product_Variant.objects.get(product_variant_slug=slug)
+        product = Product.objects.get(product_slug=slug)
     except Exception:
         return redirect('product:product_list')
     product.delete()
@@ -99,15 +106,15 @@ def delete_product(request, slug):
 
 # ^ Edit product
 def edit_product(request, slug):
-    products = Product_Variant.objects.get(product_variant_slug=slug)
+    products = Product.objects.get(product_slug=slug)
     if request.method == 'POST':
-        form = product_variant_form(
+        form = product_form(
             request.POST, request.FILES, instance=products)
         if form.is_valid():
             form.save()
         else:
             return render(request, 'admin_partition/addfield.html',
                           {'form': form})
-    form = product_variant_form(instance=products)
+    form = product_form(instance=products)
 
     return render(request, 'admin_partition/addfield.html', {'form': form})

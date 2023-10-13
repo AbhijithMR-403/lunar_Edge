@@ -5,7 +5,7 @@
     <div class="table-responsive">
         <table class="table">
             <thead>
-                <tr>
+                <tr class="text-center">
                     <th>Order</th>
                     <th>Date</th>
                     <th>Status</th>
@@ -15,7 +15,7 @@
             </thead>
             <tbody>
                 {% for order in order_details %}
-                <tr>
+                <tr class="text-center">
                     <td>#{{order.id}}</td>
                     <td>{{order.created_at}}</td>
                     <td>{{order.order_status}}</td>

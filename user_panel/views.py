@@ -1,15 +1,22 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth import logout
 from category_management.models import Category
-from product_management.models import Product_Variant
+from product_management.models import Product_Variant, Product
 from .models import Cart, Cart_item
 from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
 
 
 def home_page(request):
+    product = Product.objects.all()
+    products_list = []
+    for i in product:
+        if Product_Variant.objects.filter(product=i):
+            products_list.append(Product_Variant.objects.filter(product=i)[0])
+    print(products_list)
+
     content = {
-        "products": Product_Variant.objects.all(),
+        "products": products_list,
         "categories": Category.objects.all(),
     }
     return render(request, "user_partition/user_page/home.html", content)
@@ -60,7 +67,6 @@ def user_cart(request, slug=None):
         "subtotal": subtotal,
         "total": subtotal + 100,
     }
-
     return render(request, "user_partition/order/cart.html", context)
 
 

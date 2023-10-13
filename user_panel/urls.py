@@ -17,4 +17,5 @@ urlpatterns = [
     path('order/', views.order, name='order'),
     path('plus_cart/<str:slug>/', views.plus_cart, name='plus_cart'),
     path('minus_cart/<str:slug>/', views.minus_cart, name='minus_cart'),
+    
 ]

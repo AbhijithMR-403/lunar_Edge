@@ -43,8 +43,10 @@ def order(request):
 
 def wallet_profile(request):
     user = Account.objects.get(email=request.user)
-    wallets = wallet.objects.get_or_create(user=user)
-    return render(request, 'user_partition/profile/wallet.html', {{'wallets':wallets}})
+    wallets, check_created = wallet.objects.get_or_create(user=user)
+    print(wallets.balance)
+    return render(request,
+                  'user_partition/profile/wallet.html', {'wallets': wallets})
 
 
 def wishlist(request):
@@ -52,8 +54,13 @@ def wishlist(request):
 
 
 def order_cancel(request, id):
-    wallet_balance = wallet.objects.select_related('user').get(user__email= required.user)
+    wallet_balance = wallet.objects.select_related(
+        'user').get(user__email=request.user)
     cart_detail = Order.objects.get(id=id)
     cart_detail.order_status = 'Cancelled'
     wallet_balance.balance += cart_detail.order_total
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+
+def order_details(request):
+    return render(request, 'user_partition/profile/order_detail.html')

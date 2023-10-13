@@ -39,6 +39,7 @@ class Product(models.Model):
     product_slug = models.SlugField(
         unique=True, blank=True, max_length=200)
     product_description = models.TextField(max_length=2500)
+    thumbnail_image = models.ImageField(upload_to='products/thumbnail')
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -71,7 +72,6 @@ class Product_Variant(models.Model):
                                             blank=True,
                                             max_length=200
                                             )
-    thumbnail_image = models.ImageField(upload_to='products/thumbnail')
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -6,7 +6,7 @@ from product_management.models import Product_Variant
 # Create your models here.
 
 class Cart(models.Model):
-    user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
     created_date = models.DateField(auto_now_add=True)
 
 

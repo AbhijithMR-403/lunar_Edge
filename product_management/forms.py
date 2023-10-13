@@ -52,7 +52,7 @@ class product_variant_form(forms.ModelForm):
     class Meta:
         model = Product_Variant
         fields = '__all__'
-        exclude = ['is_active', 'product_variant_slug']
+        exclude = ['is_active', 'product_variant_slug', 'product']
         widgets = {
             'product': forms.RadioSelect,
             'model_id': forms.TextInput(attrs={'class': "form-control"}),
