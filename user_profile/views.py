@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from authenticator.models import Account, user_profile
 from order.models import Order
 from .models import wallet
+from order.models import Order, OrderProduct
 from django.http import HttpResponseRedirect
 
 # Create your views here.
@@ -62,5 +63,11 @@ def order_cancel(request, id):
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
-def order_details(request):
-    return render(request, 'user_partition/profile/order_detail.html')
+def order_details(request, id):
+    order = Order.objects.get(id=id)
+    order_details = OrderProduct.objects.filter(order=order)
+    context = {
+        'order': order,
+        'order_details': order_details,
+    }
+    return render(request, 'user_partition/profile/order_detail.html', context)

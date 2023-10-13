@@ -5,7 +5,7 @@
 <div class="container">
   <!-- Title -->
   <div class="d-flex justify-content-between align-items-center py-3">
-    <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #16123222</h2>
+    <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #{{order.order_number}}</h2>
   </div>
 
   <!-- Main content -->
@@ -16,13 +16,26 @@
         <div class="card-body">
           <div class="mb-3 d-flex justify-content-between">
             <div>
-              <span class="me-3">22-11-2021</span>
-              <span class="me-3">#16123222</span>
-              <span class="me-3">Visa -1234</span>
-              <span class="badge rounded-pill bg-info">SHIPPING</span>
+              <span class="me-3">{{order.created_at}}</span>
+              <span class="me-3">#{{order.order_number}}</span>
+              <span class="me-3">{{order.payment.payment_method}}</span>
+              {% if order.order_status == 'Accepted' %}
+              <span class="badge rounded-pill bg-warning">{{order.order_status}}</span>
+              {% endif %}
+              {% if order.order_status == 'Delivered' %}
+              <span class="badge rounded-pill bg-success">{{order.order_status}}</span>
+              {% endif %}
+              {% if order.order_status == 'Cancelled' %}
+              <span class="badge rounded-pill bg-danger">{{order.order_status}}</span>
+              {% endif %}
+              {% if order.order_status == 'Returned' %}
+              <span class="badge rounded-pill bg-info">{{order.order_status}}</span>
+              {% endif %}
             </div>
             <div class="d-flex">
+              {% if order.order_status == "Delivered" %}
               <button class="btn btn-link p-0 me-3 d-none d-lg-block btn-icon-text"><i class="bi bi-download"></i> <span class="text">Invoice</span></button>
+              {% endif %}
               <div class="dropdown">
                 <button class="btn btn-link p-0 text-muted" type="button" data-bs-toggle="dropdown">
                   <i class="bi bi-three-dots-vertical"></i>
@@ -36,56 +49,51 @@
           </div>
           <table class="table table-borderless">
             <tbody>
+              {% for product in order_details %}
               <tr>
                 <td>
                   <div class="d-flex mb-2">
                     <div class="flex-shrink-0">
-                      <img src="https://www.bootdey.com/image/280x280/87CEFA/000000" alt="" width="35" class="img-fluid">
+                      <img src="{{product.product.thumbnail_image.url}}" alt="" width="35" class="img-fluid">
                     </div>
                     <div class="flex-lg-grow-1 ms-3">
-                      <h6 class="small mb-0"><a href="#" class="text-reset">Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi</a></h6>
-                      <span class="small">Color: Black</span>
+                      <h6 class="small mb-0"><a href="#" class="text-reset">{{product.product.description}}</a></h6>
+                      <span class="small">{% for attribute in product.product.attributes.all %} {{attribute}} {% endfor %}</span>
                     </div>
                   </div>
                 </td>
-                <td>1</td>
-                <td class="text-end">$79.99</td>
+                <td>{{product.quantity}}</td>
+                <td class="text-end">₹{{product.product_price}}</td>
               </tr>
-              <tr>
-                <td>
-                  <div class="d-flex mb-2">
-                    <div class="flex-shrink-0">
-                      <img src="https://www.bootdey.com/image/280x280/FF69B4/000000" alt="" width="35" class="img-fluid">
-                    </div>
-                    <div class="flex-lg-grow-1 ms-3">
-                      <h6 class="small mb-0"><a href="#" class="text-reset">Smartwatch IP68 Waterproof GPS and Bluetooth Support</a></h6>
-                      <span class="small">Color: White</span>
-                    </div>
-                  </div>
-                </td>
-                <td>1</td>
-                <td class="text-end">$79.99</td>
-              </tr>
+              {% endfor %}
+              
             </tbody>
             <tfoot>
               <tr>
                 <td colspan="2">Subtotal</td>
-                <td class="text-end">$159,98</td>
+                <td class="text-end">₹{{order.order_total}}</td>
               </tr>
               <tr>
                 <td colspan="2">Shipping</td>
-                <td class="text-end">$20.00</td>
+                <td class="text-end">₹20.00</td>
               </tr>
               <tr>
                 <td colspan="2">Discount (Code: NEWYEAR)</td>
-                <td class="text-danger text-end">-$10.00</td>
+                <td class="text-danger text-end">-₹10.00</td>
               </tr>
               <tr class="fw-bold">
                 <td colspan="2">TOTAL</td>
-                <td class="text-end">$169,98</td>
+                <td class="text-end">₹{{order.payment.amount_paid}}</td>
               </tr>
             </tfoot>
           </table>
+          
+          {% if order.order_status == 'Accepted' %}
+          <button type="button" class="btn btn-danger">Cancel</button>
+          {% endif %}
+          {% if order.order_status == 'Delivered' %}
+          <button type="button" class="btn btn-danger">Return</button>
+          {% endif %}
         </div>
       </div>
       <!-- Payment -->
@@ -100,10 +108,14 @@
             <div class="col-lg-6">
               <h3 class="h6">Billing address</h3>
               <address>
-                <strong>John Doe</strong><br>
-                1355 Market St, Suite 900<br>
-                San Francisco, CA 94103<br>
-                <abbr title="Phone">P:</abbr> (123) 456-7890
+                <strong>{{order.shipping_address.name}}</strong><br>
+                {{order.shipping_address.address_line_1}},<br>
+                {% if order.shipping_address.address_line_2 %}
+                {{order.shipping_address.address_line_2}},<br>
+                {% endif %}
+                {{order.shipping_address.city}}, {{order.shipping_address.state}}, {{order.shipping_address.country}},<br>
+                {{order.shipping_address.pincode}}. <br>
+                <abbr title="Phone">P: </abbr>{{order.shipping_address.phone}}
               </address>
             </div>
           </div>

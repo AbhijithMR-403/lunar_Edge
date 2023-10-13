@@ -38,8 +38,7 @@ class Product(models.Model):
         Brand, on_delete=models.SET_NULL, null=True)
     product_slug = models.SlugField(
         unique=True, blank=True, max_length=200)
-    product_description = models.TextField(max_length=2500)
-    thumbnail_image = models.ImageField(upload_to='products/thumbnail')
+    product_description = models.TextField(max_length=5000)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -68,6 +67,7 @@ class Product_Variant(models.Model):
     max_price = models.DecimalField(max_digits=10, decimal_places=2)
     sale_price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField()
+    thumbnail_image = models.ImageField(upload_to='products/thumbnail')
     product_variant_slug = models.SlugField(unique=True,
                                             blank=True,
                                             max_length=200

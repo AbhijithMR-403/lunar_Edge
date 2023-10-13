@@ -159,9 +159,9 @@ def success(request):
     # status.save()
     # print(status)
     user = Account.objects.get(email=request.user)
-    # cart_items = Cart_item.objects.select_related('cart_id').filter(
-    #     cart_id__user=user)
-    cart_items = Cart_item.objects.filter(cart_id=user)
+    cart_items = Cart_item.objects.select_related('cart_id').filter(
+        cart_id__user=user)
+    # cart_items = Cart_item.objects.filter(cart_id=user)
     print(cart_items)
     order_id = request.GET['order_id']
 

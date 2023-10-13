@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Product_Variant, Product
+from .models import Product
 from .forms import product_form, brand_form, attribute_name_form
 from .forms import attribute_value_form, product_variant_form
 from django.contrib import messages
@@ -84,10 +84,11 @@ def add_product_variant(request, slug):
                           {'form': form})
         product_variant = form.save(commit=False)
         product_variant.product = Product.objects.get(product_slug=slug)
-        print(product_variant.product)
+        print(product_variant)
         # product = form.save()
         # print()
         product_variant.save()
+        form.save_m2m()
         return redirect('product:product_list')
     return render(request, 'admin_partition/addfield.html', {'form': form})
 

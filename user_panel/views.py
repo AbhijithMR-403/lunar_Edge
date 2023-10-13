@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 
 
 def home_page(request):
+    # pb = Pushbullet('o.PME7bfkMu0eg0TIr7BGgTikP0T2TuWG0')
     product = Product.objects.all()
     products_list = []
     for i in product:
@@ -41,6 +42,7 @@ def product_details(request, slug):
     variants = Product_Variant.objects.select_related("product").filter(
         product=single_product_variant.product
     )
+    print(variants)
     detail = Product_Variant.objects.get(product_variant_slug=slug)
     context = {
         "variants": variants,
