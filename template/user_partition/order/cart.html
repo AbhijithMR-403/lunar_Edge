@@ -24,7 +24,7 @@
                         {% for item in cart_items %}
                         <tr>
                             
-                            <td class="align-middle"><img src="img/product-1.jpg" alt="" style="width: 50px;"> 
+                            <td class="align-middle"><img src={{item.product_id.thumbnail_image.url}} alt="" style="width: 50px;"> 
                                 <a href='{% url "user_home:product_details" slug=item.product_id.id %}'>
                                 {{item.product_id.product.product_name}}
                             </a>
@@ -34,14 +34,14 @@
                                 <div class="input-group quantity mx-auto" style="width: 100px;">
                                     <div class="input-group-btn">
                                         <button class="btn btn-sm btn-warning-emphasis btn-minus" >
-                                            <a href="{% url 'user_home:minus_cart' slug=item.product_id.product_variant_slug %}">
+                                            <a href="{% url 'user_cart:minus_cart' slug=item.product_id.product_variant_slug %}">
                                                 <i class="fa fa-minus"></i></a>
                                         </button>
                                     </div>
                                     <input type="text" class="form-control form-control-sm bg-white-50 border-0 text-center" value=" {{item.quantity}} ">
                                     <div class="input-group-btn">
                                         <button class="btn btn-sm btn-warning-emphasis btn-plus">
-                                            <a href="{% url 'user_home:plus_cart' slug=item.product_id.product_variant_slug %}">
+                                            <a href="{% url 'user_cart:plus_cart' slug=item.product_id.product_variant_slug %}">
                                             <i class="fa fa-plus"></i>
                                         </a>
                                         </button>
@@ -49,28 +49,18 @@
                                 </div>
                             </td>
                             <td class="align-middle"></td>
-                            <td class="align-middle"><button class="btn btn-sm btn-danger">
-                                    <a class='text-dark text-decoration-none' href={% url "user_home:delete_cart_item" id=item.id %}>
+                            <td class="align-middle">
+                                <button class="btn btn-sm btn-danger">
+                                    <a class='text-dark text-decoration-none' href={% url "user_cart:delete_cart_item" id=item.id %}>
                                     <i class="fa fa-times"></i>
                                 </a>
                                 </button></td>
                         </tr>
                         {% endfor %}
-                    </tbody>              
-                            
-                      
-                    
+                    </tbody>
                 </table>
             </div>
             <div class="col-lg-4">
-                <form class="mb-30" action="">
-                    <div class="input-group">
-                        <input type="text" class="form-control border-0 p-4" placeholder="Coupon Code">
-                        <div class="input-group-append">
-                            <button class="btn btn-info">Apply Coupon</button>
-                        </div>
-                    </div>
-                </form>
                 <h5 class="section-title position-relative text-uppercase mb-3"><span class=" pr-3">Cart Summary</span></h5>
                 <div class="bg-light p-30 mb-5">
                     <div class="border-bottom pb-2">
@@ -97,6 +87,5 @@
         </div>
     </div>
     <!-- Cart End -->
-
 
 {% endblock body %}

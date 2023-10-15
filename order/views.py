@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.http import HttpResponseRedirect
+
+from user_cart.models import Coupon
 from .form import addressbook_form
 from authenticator.models import Account, AddressBook
 from user_panel.models import Cart, Cart_item
@@ -34,9 +36,17 @@ def checkout(request):
         "cart_id").filter(cart_id=cart_id)
     if cart_details.count() == 0:
         messages.warning(request, 'Add Product To Cart')
-        return redirect('user_home:user_cart')
+        return redirect('user_cart:user_cart')
     subtotal = sum(i.product_id.sale_price * i.quantity for i in cart_details)
     addresses = AddressBook.objects.filter(user=request.user)
+    # ^ Order
+    order_details = Order.objects.get(order_number=request.session['cart_id'])
+    coupon = order_details.coupon
+    if coupon != None:
+        order_details.additional_discount = coupon.discount
+    else:
+        order_details.additional_discount = 0
+    total = subtotal + 100 - order_details.additional_discount
     context = {
         "total": subtotal + 100,
         "subtotal": subtotal,
@@ -153,11 +163,6 @@ def payment_gateway(request):
 
 
 def success(request):
-    # order_id = request.GET['order_id']
-    # status = Payment.objects.get(payment_order_id=order_id)
-    # status.payment_status = 'success'
-    # status.save()
-    # print(status)
     user = Account.objects.get(email=request.user)
     cart_items = Cart_item.objects.select_related('cart_id').filter(
         cart_id__user=user)
@@ -192,3 +197,15 @@ def success(request):
 
 def order_success(request):
     return render(request, 'user_partition/order/order_success.html')
+
+
+def add_coupon(request):
+    print(request.POST['coupon'])
+    coupon_code = Coupon.objects.filter(code=request.POST['coupon'])
+    print(coupon_code)
+    # check_coupon = coupon_code.exists()
+    # if check_coupon:
+    #     min_amt = coupon_code[0].minimum_amount
+    #     discount = coupon_code[0].discount
+    # coupon_data = serializers.serialize('json', coupon_code)
+    return redirect('order:checkout')

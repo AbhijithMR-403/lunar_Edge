@@ -98,6 +98,16 @@
         <div class="col-lg-4">
             <h5 class="section-title position-relative text-uppercase mb-3"><span class="pr-3">Order Total</span></h5>
             <div class="bg-light p-30 mb-5">
+                <form class="mb-30" mehtod='POST' action='{% url "order:add_coupon"%}'>
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input id='coupon' type="text" class="form-control border-0 p-4" placeholder="Coupon Code" name="coupon" >
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-sm btn-info">Apply Coupon</button>
+                        </div>
+                    </div>
+                </form>
+                
                 <div class="border-bottom">
                     <h6 class="mb-3">Products</h6>
                     {% for item in cart_details %}
@@ -112,6 +122,10 @@
                         <h6>Subtotal</h6>
                         <h6>₹{{subtotal}}</h6>
                     </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <h6 id='hh'>Coupon</h6>
+                        <h6 id='hh1'>None</h6>
+                    </div>
                     <div class="d-flex justify-content-between">
                         <h6 class="font-weight-medium">Shipping</h6>
                         <h6 class="font-weight-medium">₹100</h6>
@@ -124,6 +138,12 @@
                     </div>
                 </div>
             </div>
+            {% comment %} <!-- ^ Coupon -->
+            <div class="mb-5">
+                
+            </div> {% endcomment %}
+
+            <!-- ^ Razor pay -->
             <div class="mb-5">
                 <form action="{% url "order:place_order" %}" method="post"> {% csrf_token %}
                 <h5 class="section-title position-relative text-uppercase mb-3"><span class="pr-3">Payment</span></h5>
@@ -153,6 +173,52 @@
         </div>
     </div>
 </div>
-
 <!-- Checkout End -->
+
+{% comment %} <script>
+    function get_wallet_grand_total()
+    {
+        coupon_code =  document.getElementById('coupon').value
+        console.log(coupon_code,'jdk')
+        var data ={
+            coupon_code:coupon_code
+        }
+        var url = '{% url "user_cart:add_coupon" %}'
+        console.log(data)
+        console.log(url)
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        $.ajax({
+            method: "POST",
+            url: url,
+            data: JSON.stringify(data) ,
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
+                'X-CSRFToken': csrftoken
+            },
+            success: (data) => {
+                if (data.status === "success") {
+                   // console.log(data.check_coupon)
+                   if (data.check_coupon == true){
+                       console.log(data,'\n\n\n\nreched here man suoer');
+                   }
+                    //document.getElementById('wallet_updated_balance').innerHTML = data.wallet_balance
+                    //document.getElementById('grand_total_update').innerHTML     = data.grand_total
+                } else {
+                    // Password change error
+                    console.log(data);
+                }
+            },
+            error: (xhr, status, error) => {
+                // Display the error message on the page
+                console.log("error");
+                console.log(error);
+            }
+        });
+    }
+    function displayDate(){
+        console.log('reached jher acer')
+        document.getElementById('hh1').innerHTML='4783'
+    }
+    document.getElementById("hh").addEventListener("click", displayDate);
+</script> {% endcomment %}
 {% endblock body %}

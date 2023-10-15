@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect
 from authenticator.models import Account
-from admin_panel.models import *
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.views.decorators.cache import cache_control
+from user_cart.models import Coupon
+from admin_panel.form import Coupon_form
 
 
 # ^ Dashboard
@@ -78,3 +79,16 @@ def block_unblock_user(request, id, block):
     except:
         pass
     return redirect('admin_panel:user_list')
+
+
+def coupon(request):
+    form = Coupon_form
+    if request.method == "POST":
+        form = Coupon_form(request.POST)
+        if not form.is_valid():
+            return render(request, 'admin_partition/addproduct.html',
+                          {'form': form})
+        form.save()
+        return redirect('product:add_product')
+    return render(request, 'admin_partition/addfield.html', {'form': form})
+

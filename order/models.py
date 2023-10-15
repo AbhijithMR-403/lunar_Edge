@@ -1,6 +1,7 @@
 from django.db import models
 from authenticator.models import Account, AddressBook
 from product_management.models import Product_Variant
+from user_cart.models import Coupon
 # Create your models here.
 
 
@@ -47,11 +48,12 @@ class Order(models.Model):
     user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
     payment = models.ForeignKey(
         Payment, on_delete=models.SET_NULL, null=True, blank=True)
+    coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, null=True)
     order_number = models.CharField(max_length=100)
     shipping_address = models.ForeignKey(
         AddressBook, on_delete=models.SET_NULL, null=True)
-    # additional_discount = models.IntegerField(default=0, null=True)
-    # wallet_discount = models.IntegerField(default=0, null=True)
+    additional_discount = models.IntegerField(default=0, null=True)
+    wallet_discount = models.IntegerField(default=0, null=True)
     # order_note = models.CharField(max_length=100, blank=True, null=True)
     # ip = models.CharField(max_length=50, blank=True)
     order_total = models.DecimalField(max_digits=12, decimal_places=2)

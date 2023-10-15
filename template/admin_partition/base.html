@@ -50,10 +50,11 @@
                 </li>
                 <li class="menu-item has-submenu">
                     <a class="menu-link" href="page-orders-1.html"> <i class="icon material-icons md-shopping_cart"></i>
-                        <span class="text">Orders</span>
+                        <span class="text">Orders And Coupons</span>
                     </a>
                     <div class="submenu">
                         <a href="{% url "admin_order:order_list" %}">Order list</a>
+                        <a href="{% url "admin_panel:coupon" %}">Coupons</a>
                         {% comment %} <a href="{% url "admin_order:order_details" %}">Order detail</a> {% endcomment %}
                     </div>
                 </li>
