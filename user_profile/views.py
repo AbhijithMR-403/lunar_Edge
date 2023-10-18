@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from authenticator.models import Account, user_profile
 from order.models import Order
-from .models import wallet
+# from .models import wallet
 from order.models import Order, OrderProduct
 from django.http import HttpResponseRedirect
 
@@ -18,8 +18,6 @@ def profile(request):
     if request.method == 'POST':
         field_name = request.POST['name']
         value = request.POST['value']
-        print(value)
-        print(field_name)
         # user_data = Account.objects.get(email=request.user)
         setattr(user_extra_details, field_name, value)
         user_extra_details.save()
@@ -44,8 +42,7 @@ def order(request):
 
 def wallet_profile(request):
     user = Account.objects.get(email=request.user)
-    wallets, check_created = wallet.objects.get_or_create(user=user)
-    print(wallets.balance)
+    wallets, check_created = user_profile.objects.get_or_create(account=user)
     return render(request,
                   'user_partition/profile/wallet.html', {'wallets': wallets})
 
@@ -55,11 +52,13 @@ def wishlist(request):
 
 
 def order_cancel(request, id):
-    wallet_balance = wallet.objects.select_related(
-        'user').get(user__email=request.user)
+    wallet_balance = user_profile.objects.get(account=request.user)
     cart_detail = Order.objects.get(id=id)
     cart_detail.order_status = 'Cancelled'
-    wallet_balance.balance += cart_detail.order_total
+    wallet_balance.wallet = float(cart_detail.payment.amount_paid)
+    wallet_balance.save()
+    cart_detail.save()
+    print('reacjed here')
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 

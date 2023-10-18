@@ -1,19 +1,57 @@
+from collections import defaultdict
 from django.shortcuts import render, redirect
 from authenticator.models import Account
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.views.decorators.cache import cache_control
 from user_cart.models import Coupon
+from product_management.models import Product, Product_Variant
 from admin_panel.form import Coupon_form
+from order.models import Order
 
+# ! I had remove the inbuild template
+# ^ And add other one this might seen to be good
 
 # ^ Dashboard
+
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def dashboard(request):
     # Later you can reduce this code
     if not request.user.is_superuser:
         return redirect('admin_panel:login')
-    return render(request, 'admin_partition/dashboard.html')
+
+    total_users_count = int(Account.objects.count())
+    product_count = Product.objects.count()
+    user_order = Order.objects.count()
+    # for i in monthly_order_totals:
+    completed_orders = Order.objects.filter()
+
+    monthly_totals_dict = defaultdict(float)
+
+    # Iterate over completed orders and calculate monthly totals
+    for order in completed_orders:
+        order_month = order.created_at.strftime('%m-%Y')
+        monthly_totals_dict[order_month] += float(order.order_total)
+
+    print(monthly_totals_dict)
+    months = list(monthly_totals_dict.keys())
+    totals = list(monthly_totals_dict.values())
+
+    variants = Product_Variant.objects.all()
+
+    context = {
+        'total_users_count': total_users_count,
+        'product_count': product_count,
+        'order': user_order,
+        # # 'orders':orders,
+        'variants': variants,
+        'months': months,
+        'totals': totals,
+
+
+    }
+    return render(request, 'admin_partition/chart/admin_chart.html', context)
 
 
 # ^ Logout
@@ -92,3 +130,67 @@ def coupon(request):
         return redirect('product:add_product')
     return render(request, 'admin_partition/addfield.html', {'form': form})
 
+
+def chart(request):
+    total_users_count = int(Account.objects.count())
+    product_count = Product.objects.count()
+    order = Order.objects.filter().count()
+    # for i in monthly_order_totals:
+    completed_orders = Order.objects.filter()
+
+    monthly_totals_dict = defaultdict(float)
+
+    # Iterate over completed orders and calculate monthly totals
+    for order in completed_orders:
+        order_month = order.created_at.strftime('%m-%Y')
+        monthly_totals_dict[order_month] += float(order.order_total)
+
+    print(monthly_totals_dict)
+    months = list(monthly_totals_dict.keys())
+    totals = list(monthly_totals_dict.values())
+
+    monthNumber = []
+    totalOrders = []
+
+    variants = Product_Variant.objects.all()
+
+    context = {
+        'total_users_count': total_users_count,
+        'product_count': product_count,
+        'order': order,
+        # # 'orders':orders,
+        'variants': variants,
+        'months': months,
+        'totals': totals,
+
+
+    }
+    return render(request, 'admin_partition/chart/admin_chart.html', context)
+
+
+def report(request):
+    sales = Order.objects.all()
+    context = {
+        'sales': sales,
+    }
+    return render(request, 'admin_partition/chart/report.html', context)
+
+
+def filtered_sales(request):
+    # Get the minimum and maximum price values from the request parameters
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
+    from_date = f'{start_date}+00:00'
+    to_date = f'{end_date} 23:59:59+00:00'
+    orders = Order.objects.filter(
+        created_at__gte=from_date, created_at__lte=to_date)
+
+    context = {
+        "sales": orders,
+        "start_date": start_date,
+        "end_date": end_date
+
+    }
+
+    return render(request, 'admin_partition/chart/report.html', context)

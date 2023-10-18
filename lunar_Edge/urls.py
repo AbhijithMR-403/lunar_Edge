@@ -29,6 +29,7 @@ urlpatterns = [
     path('admin/', include('admin_panel.urls')),
     path('admin/', include('category_management.urls')),
     path('admin/', include('product_management.urls')),
+    path("__debug__/", include("debug_toolbar.urls")),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

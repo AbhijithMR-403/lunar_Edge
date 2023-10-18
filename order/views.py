@@ -1,7 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.http import HttpResponseRedirect
-
-from user_cart.models import Coupon
 from .form import addressbook_form
 from authenticator.models import Account, AddressBook
 from user_panel.models import Cart, Cart_item
@@ -11,7 +9,6 @@ from django.views.decorators.cache import cache_control
 from django.conf import settings
 import uuid
 import razorpay
-
 # Create your views here.
 
 
@@ -39,16 +36,13 @@ def checkout(request):
         return redirect('user_cart:user_cart')
     subtotal = sum(i.product_id.sale_price * i.quantity for i in cart_details)
     addresses = AddressBook.objects.filter(user=request.user)
-    # ^ Order
-    order_details = Order.objects.get(order_number=request.session['cart_id'])
-    coupon = order_details.coupon
-    if coupon != None:
-        order_details.additional_discount = coupon.discount
-    else:
-        order_details.additional_discount = 0
-    total = subtotal + 100 - order_details.additional_discount
+    discount = 0
+    if cart_id.coupon:
+        discount = cart_id.coupon.discount
+    total = subtotal + 100 - discount
     context = {
-        "total": subtotal + 100,
+        "cart_id": cart_id,
+        "total": total,
         "subtotal": subtotal,
         "cart_details": cart_details,
         "addresses": addresses,
@@ -57,7 +51,6 @@ def checkout(request):
 
 
 def default_address(request, id):
-    # if not request.session['default']:
     address = AddressBook.objects.get(id=id)
     address.is_default = True
     address.save()
@@ -77,18 +70,24 @@ def place_order(request):
         address = AddressBook.objects.get(user=user, is_default=True)
         cart_items = Cart_item.objects.select_related('cart_id').filter(
             cart_id__user=request.user)
-        subtotal = sum(i.product_id.sale_price * i.quantity for i in cart_items)
+        subtotal = sum(i.product_id.sale_price *
+                       i.quantity for i in cart_items)
         order_id = int(uuid.uuid4().hex[:5], 16)
+        discount = 0
+        if Cart.objects.get(user=request.user).coupon:
+            discount = Cart.objects.get(user=request.user).coupon.discount
+
         # ^ Payment table
         payment_object = Payment.objects.create(
             user=user, payment_order_id=order_id,
-            amount_paid=subtotal+100, payment_status='PENDING')
+            amount_paid=subtotal+100-discount, payment_status='PENDING')
 
         # ^ Order details
         order_object = Order.objects.create(
             user=user, payment=payment_object, order_number=order_id,
-            shipping_address=address, order_total=subtotal
-            )
+            shipping_address=address, order_total=subtotal,
+            additional_discount=discount,
+        )
         order_object.save()
 
         request.session['cart_id'] = order_id
@@ -123,9 +122,9 @@ def cash_on_delivery(request):
         ordered_product = OrderProduct.objects.create(
             order=order_object, user=user, product=product,
             quantity=quantity, product_price=price
-            )
+        )
         ordered_product.save()
-    cart = Cart.objects.get(user=user)
+    cart = Cart.objects.get(user=request.user)
     print(cart, '\n\n\n\n\n')
     cart.delete()
     return redirect('order:order_success')
@@ -139,7 +138,6 @@ def payment_gateway(request):
     payment_method = Payment.objects.get(payment_order_id=order_id)
     if payment_method.payment_status == 'SUCCESS':
         return redirect("user_home:home")
-
     Total_amount = float(payment_method.amount_paid)
     # ^ Razor pay
     if payment_method.payment_method == 'razorpay':
@@ -166,7 +164,6 @@ def success(request):
     user = Account.objects.get(email=request.user)
     cart_items = Cart_item.objects.select_related('cart_id').filter(
         cart_id__user=user)
-    # cart_items = Cart_item.objects.filter(cart_id=user)
     print(cart_items)
     order_id = request.GET['order_id']
 
@@ -187,25 +184,21 @@ def success(request):
         ordered_product = OrderProduct.objects.create(
             order=order_object, user=user, product=product,
             quantity=quantity, product_price=price
-            )
+        )
         ordered_product.save()
-    print("\n\n\n\n\n\n\n\n\n\n\n\n")
-    print('dsafjdfkjfkj', Cart.objects.filter(user=user))
-    Cart.objects.get(user=user).delete()
-    return redirect('order:order_success')
+    try:
+        cart_item = Cart.objects.get(user=request.user)
+        cart_item.delete()
+        return redirect('order:order_success')
+    except :
+        return HttpResponse("Cart does not exist for the current user.")
 
 
 def order_success(request):
-    return render(request, 'user_partition/order/order_success.html')
-
-
-def add_coupon(request):
-    print(request.POST['coupon'])
-    coupon_code = Coupon.objects.filter(code=request.POST['coupon'])
-    print(coupon_code)
-    # check_coupon = coupon_code.exists()
-    # if check_coupon:
-    #     min_amt = coupon_code[0].minimum_amount
-    #     discount = coupon_code[0].discount
-    # coupon_data = serializers.serialize('json', coupon_code)
-    return redirect('order:checkout')
+    user_order = Order.objects.get(order_number=request.session['cart_id'])
+    order_items = OrderProduct.objects.filter(order=user_order)
+    content = {
+        'user_order': user_order,
+        'order_items': order_items,
+    }
+    return render(request, 'user_partition/order/order_success.html', content)

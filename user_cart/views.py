@@ -4,9 +4,7 @@ from product_management.models import Product_Variant
 from user_panel.models import Cart, Cart_item
 from django.contrib import messages
 from .models import Coupon
-import json
-from django.http import HttpResponseRedirect, JsonResponse
-from django.core import serializers
+from django.http import HttpResponseRedirect
 
 
 # Create your views here.
@@ -22,12 +20,20 @@ def user_cart(request, slug=None):
     # & Else return to previous page
     if cart_items.count() == 0:
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
-
+    discount = 0
     subtotal = sum(i.product_id.sale_price * i.quantity for i in cart_items)
+    total = subtotal + 100
+    if user_cart.coupon:
+        print(user_cart.coupon)
+        if user_cart.coupon.minimum_amount < total:
+            discount = user_cart.coupon.discount
+
+    # request.session["cart_total"] = str(subtotal + 100)
     context = {
+        "user_cart": user_cart,
         "cart_items": cart_items,
         "subtotal": subtotal,
-        "total": subtotal + 100,
+        "total": subtotal + 100 - discount,
     }
     return render(request, "user_partition/order/cart.html", context)
 
@@ -46,7 +52,6 @@ def add_to_cart(request, id):
     )
     cart_item.quantity += 1
     cart_item.save()
-
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
@@ -76,3 +81,23 @@ def minus_cart(request, slug):
     else:
         cart_item.delete()
     return redirect("user_cart:user_cart")
+
+
+def add_coupon(request):
+    coupon_code = Coupon.objects.filter(code=request.POST['coupon'])
+    print(coupon_code)
+    if coupon_code.exists():
+        user_cart = Cart.objects.get(user=request.user)
+        user_cart.coupon = coupon_code[0]
+        user_cart.save()
+        # min_amt = coupon_code[0].minimum_amount
+        # if min_amt < request.session["cart_total"]:
+        #     discount = coupon_code[0].discount
+    return redirect('user_cart:user_cart')
+
+
+def remove_coupon(request):
+    user_cart = Cart.objects.get(user=request.user)
+    user_cart.coupon = None
+    user_cart.save()
+    return redirect('user_cart:user_cart')

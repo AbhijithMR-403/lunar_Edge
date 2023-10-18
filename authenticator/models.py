@@ -72,6 +72,7 @@ class user_profile(models.Model):
     phone_number = models.CharField(max_length=50, default='0000000000')
     profile_img = models.ImageField(
         upload_to="user/profile", blank=True, null=True)
+    wallet = models.DecimalField(max_digits=13, decimal_places=2, default=0)
     nationality = models.CharField(max_length=50, null=True)
     DOB = models.DateField(blank=True, null=True)
 

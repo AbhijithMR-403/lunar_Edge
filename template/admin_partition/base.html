@@ -68,6 +68,11 @@
                         <span class="text">User list</span>
                     </a>
                 </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="{% url 'admin_panel:report' %}"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Order report</span>
+                    </a>
+                </li>
                 <li class="menu-item has-submenu">
                     <a class="menu-link" href="page-form-product-1.html"> <i class="icon material-icons md-add_box"></i>
                         <span class="text">Product variant</span>
@@ -223,7 +228,7 @@
 
 <!-- Main Script -->
 <script src='{% static "js/main.js" %}' type="text/javascript"></script>
-<script src='{% static "js/custom-chart.js" %}' type="text/javascript"></script>
+{% comment %} <script src='{% static "js/custom-chart.js" %}' type="text/javascript"></script> {% endcomment %}
 </body>
 
 

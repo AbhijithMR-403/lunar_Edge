@@ -89,7 +89,7 @@
           </table>
           
           {% if order.order_status == 'Accepted' %}
-          <button type="button" class="btn btn-danger">Cancel</button>
+          <button type="button" class="btn btn-danger"><a href="{% url "user_profile:order_cancel" id=order.id %}">Cancel</a></button>
           {% endif %}
           {% if order.order_status == 'Delivered' %}
           <button type="button" class="btn btn-danger">Return</button>

@@ -60,13 +60,33 @@
                     </tbody>
                 </table>
             </div>
+
             <div class="col-lg-4">
+                <form class="mb-30" method='POST' action='{% url "user_cart:add_coupon"%}'>
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input id='coupon' type="text" class="form-control border-0 p-4" placeholder="Coupon Code" name="coupon">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-sm btn-info">Apply Coupon</button>
+                        </div>
+                    </div>
+                </form>
                 <h5 class="section-title position-relative text-uppercase mb-3"><span class=" pr-3">Cart Summary</span></h5>
                 <div class="bg-light p-30 mb-5">
                     <div class="border-bottom pb-2">
                         <div class="d-flex justify-content-between mb-3">
                             <h6>Subtotal</h6>
                             <h6>₹{{ subtotal }}</h6>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <h6 class="font-weight-medium">Coupon</h6>
+                            {% if user_cart.coupon %}
+                            <h6 class="font-weight-medium">{{user_cart.coupon}}-{{user_cart.coupon.discount}}
+                                <a href="{% url "user_cart:remove_coupon"%}"> <i class="fa-solid fa-trash"></i></a>
+                            </h6>
+                            {% else %}
+                            <h6 class="font-weight-medium">None</h6>
+                            {% endif %}
                         </div>
                         <div class="d-flex justify-content-between">
                             <h6 class="font-weight-medium">Shipping</h6>

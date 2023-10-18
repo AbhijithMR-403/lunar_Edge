@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "debug_toolbar",
     "admin_panel",
     "authenticator",
     "user_panel",
@@ -56,6 +57,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "lunar_Edge.urls"
@@ -155,3 +157,10 @@ EMAIL_USE_TLS = True
 # Razor pay
 KEY = 'rzp_test_amAFuSg9hjXZsy'
 SECRET = 'vPGT1EQRxftdaYuDdI1305Tr'
+
+# Django Debugging tool
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
