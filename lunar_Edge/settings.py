@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-=ne@plybi@rdj#s%+#j*b7d-$@uhk5&iqk(c=3daa@7=8l0q^)"
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG',default=False,cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -89,11 +90,10 @@ AUTH_USER_MODEL = "authenticator.Account"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "lunar_edge",
-        "USER": "postgres",
-        "PASSWORD": "1234",
-        "HOST": "localhost",  # Set the host to the PostgreSQL server's address
-        # Leave this empty to use the default PostgreSQL port (5432)
+        "NAME": config('NAME'),
+        "USER": config('USER'),
+        "PASSWORD": config('PASSWORD'),
+        "HOST": "localhost",
         "PORT": "5432",
     }
 }
@@ -148,16 +148,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
 # Email
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = "587"
-EMAIL_HOST_USER = "abhijithmr581@gmail.com"
-EMAIL_HOST_PASSWORD = "ucll kgil ycln qxve"
-EMAIL_USE_TLS = True
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')
 
 
 # Razor pay
-KEY = 'rzp_test_amAFuSg9hjXZsy'
-SECRET = 'vPGT1EQRxftdaYuDdI1305Tr'
+KEY = config('KEY')
+SECRET = config('SECRET')
 
 # Django Debugging tool
 INTERNAL_IPS = [
