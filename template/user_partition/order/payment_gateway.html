@@ -128,9 +128,6 @@
         "image": "https://example.com/your_logo",
         "order_id": "{{payment.payment_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
         "handler": function (response){
-            // alert(response.razorpay_payment_id);
-            // alert(response.razorpay_order_id);
-            // alert(response.razorpay_signature)
             console.log(response)
             window.location.href = `http://127.0.0.1:8000/success?order_id={{payment_method.payment_order_id}}&method=RAZORPAY&payment_id=${response.razorpay_payment_id}&payment_order_id=${response.razorpay_order_id}`
         },

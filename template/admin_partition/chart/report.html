@@ -45,7 +45,6 @@
           <th scope="col">Amount Paid</th>
           <th scope="col">Status</th>
           <th scope="col">Summary</th>
-          {% comment %} <th scope="col">Action</th> {% endcomment %}
         </tr>
       </thead>
       <tbody>
@@ -65,7 +64,6 @@
           <td>{{sale_list.additional_discount}}</td>
           <td>{{sale_list.payment.amount_paid}}</td>
           <td>{{sale_list.order_status}}</td>
-          {% comment %} <td><a href="{% url 'order_summary' order_id=sale_list.id%}"  class="edit" ><i class="material-icons" title="variants">SUMMARY</i></a></td> {% endcomment %}
           <td>{{sale_list.payment.payment_method}}</td>
         </tr>
         {% endfor %}
@@ -106,8 +104,6 @@
 </div> 
 
 </div> 
-{% comment %} </div>
-</div> {% endcomment %}
 <script>
   $(document).ready(function(){
       // Activate tooltip

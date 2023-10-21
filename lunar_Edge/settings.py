@@ -161,7 +161,5 @@ SECRET = 'vPGT1EQRxftdaYuDdI1305Tr'
 
 # Django Debugging tool
 INTERNAL_IPS = [
-    # ...
     "127.0.0.1",
-    # ...
 ]

@@ -4,14 +4,6 @@ from product_management.models import Product_Variant
 # Create your models here.
 
 
-# class PaymentMethod(models.Model):
-#     method_name = models.CharField(max_length=100)
-#     is_active = models.BooleanField(default=True)
-
-#     def __str__(self):
-#         return self.method_name
-
-
 class Payment(models.Model):
     PAYMENT_STATUS_CHOICES = (
         ("PENDING", "Pending"),
@@ -25,7 +17,6 @@ class Payment(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     payment_id = models.CharField(max_length=100, null=True, blank=True)
     payment_order_id = models.CharField(max_length=100, null=True, blank=True)
-    # payment_signature = models.CharField(max_length=100, null=True, blank=True)
     payment_method = models.CharField(choices=PaymentMethod, max_length=100)
     amount_paid = models.CharField(max_length=30)
     payment_status = models.CharField(
@@ -52,8 +43,6 @@ class Order(models.Model):
         AddressBook, on_delete=models.SET_NULL, null=True)
     additional_discount = models.IntegerField(default=0, null=True)
     wallet_discount = models.IntegerField(default=0, null=True)
-    # order_note = models.CharField(max_length=100, blank=True, null=True)
-    # ip = models.CharField(max_length=50, blank=True)
     order_total = models.DecimalField(max_digits=12, decimal_places=2)
     order_status = models.CharField(
         choices=ORDER_STATUS_CHOICES, max_length=20, default='New')

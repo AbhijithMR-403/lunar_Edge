@@ -20,7 +20,7 @@ class Attribute(models.Model):
         return self.attribute_name
 
 
-# Attribute Value - RED,BLUE, 4GB, 8GB, 128GB , SSD , HDD
+# Attribute Value - 4GB, 8GB, 128GB 
 class Attribute_Value(models.Model):
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
     attribute_value = models.CharField(max_length=50, unique=True)
