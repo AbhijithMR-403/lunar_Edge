@@ -66,7 +66,6 @@ def plus_cart(request, slug):
     product = Product_Variant.objects.get(product_variant_slug=slug)
     cart_item = Cart_item.objects.get(cart_id=cart_user, product_id=product)
     cart_item.quantity += 1
-    print('reach here akdsfajkdhfakjfjhdfj\n\n\\n\n')
     cart_item.save()
     return redirect("user_cart:user_cart")
 
@@ -90,9 +89,6 @@ def add_coupon(request):
         user_cart = Cart.objects.get(user=request.user)
         user_cart.coupon = coupon_code[0]
         user_cart.save()
-        # min_amt = coupon_code[0].minimum_amount
-        # if min_amt < request.session["cart_total"]:
-        #     discount = coupon_code[0].discount
     return redirect('user_cart:user_cart')
 
 

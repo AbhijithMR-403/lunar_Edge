@@ -6,29 +6,27 @@ from django.core.mail import send_mail
 import random
 from django.views.decorators.cache import cache_control
 
+# ^ Template Path
+auth_user_path = "user_partition/user_authentication/"
 
-# Create your views here.
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def user_login(request):
     if request.user.is_authenticated:
         return redirect("user_home:home")
     if request.method != "POST":
-        return render(request, "user_partition/user_authentication/login.html")
+        return render(request, f"{auth_user_path}login.html")
     email = request.POST["email"]
     password = request.POST["password"]
-
     try:
         if not Account.objects.filter(email=email).exists():
             messages.warning(request, "No user found")
             return redirect("user_partition:userlogin")
     except Exception:
         pass
-    # only needed when you are doing email validation
-
     try:
         if Account.objects.filter(email=email, is_active=False).exists():
             messages.warning(request, "Your account is blocked ")
-            # Account.objects.get(email=email,is_active=False).is_active=True
             return redirect("user_partition:userlogin")
     except Exception:
         pass
@@ -40,7 +38,6 @@ def user_login(request):
     else:
         login(request, user)
         return redirect("user_home:home")
-    # !till above line
 
 
 def sent_otp(request):
@@ -69,7 +66,7 @@ def otp(request):
             return redirect("user_home:home")
         else:
             messages.warning(request, "Check your otp again")
-    return render(request, "user_partition/user_authentication/otp.html")
+    return render(request, f"{auth_user_path}otp.html")
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -77,7 +74,7 @@ def user_signup(request):
     if request.user.is_authenticated:
         return redirect("user_home:home")
     if request.method != "POST":
-        return render(request, "user_partition/user_authentication/signup.html")
+        return render(request, f"{auth_user_path}signup.html")
     username = request.POST["name"]
     email = request.POST["email"]
     password1 = request.POST["password1"]
@@ -118,18 +115,20 @@ def user_signup(request):
         messages.warning(request, "Password is wrong")
         return redirect("user_partition:usersignup")
 
+    # ^ Create user
     Myuser = Account.objects.create_user(
         username=username, email=email, password=password1
     )
-    # Myuser.save()
-
     request.session["email"] = email
     return redirect("user_partition:sent_otp")
 
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def forgetpassword(request):
+    if request.user.is_authenticated:
+        return redirect("user_home:home")
     if request.method != "POST":
-        return render(request, "user_partition/user_authentication/forgetpassword.html")
+        return render(request, f"{auth_user_path}forgetpassword.html")
     pass1 = request.POST["re_password"]
     pass2 = request.POST["password"]
     if pass1 != pass2:
@@ -142,9 +141,12 @@ def forgetpassword(request):
         return redirect("user_partition:userlogin")
 
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def email(request):
+    if request.user.is_authenticated:
+        return redirect("user_home:home")
     if request.method != "POST":
-        return render(request, "user_partition/user_authentication/email.html")
+        return render(request, f"{auth_user_path}email.html")
 
     email = request.POST["email"]
     if Account.objects.filter(email=email).exists():
@@ -161,12 +163,15 @@ def email(request):
         return redirect("user_partition:potp")
     else:
         messages.error(request, "Invalid one")
-    return render(request, "user_partition/user_authentication/email.html")
+    return render(request, f"{auth_user_path}email.html")
 
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def potp(request):
+    if request.user.is_authenticated:
+        return redirect("user_home:home")
     if request.method != "POST":
-        return render(request, "user_partition/user_authentication/potp.html")
+        return render(request, f"{auth_user_path}potp.html")
 
     if str(request.POST["otp"]) == str(request.session["POTP_Key"]):
         return redirect("user_partition:forgetpassword")

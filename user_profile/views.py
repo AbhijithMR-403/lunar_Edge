@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from authenticator.models import Account, user_profile
-from order.models import Order
-# from .models import wallet
-from order.models import Order, OrderProduct
 from django.http import HttpResponseRedirect
 
-# Create your views here.
+from authenticator.models import Account, user_profile
+from order.models import Order, OrderProduct
+
+# ^Templates
+user_profile = "user_partition/profile/"
 
 
 def profile(request):
@@ -25,11 +25,11 @@ def profile(request):
         "user_details": user,
         "user_extra_details": user_extra_details
         }
-    return render(request, "user_partition/profile/profile.html", context)
+    return render(request, f"{user_profile}profile.html", context)
 
 
 def address(request):
-    return render(request, 'user_partition/profile/address.html')
+    return render(request, f'{user_profile}address.html')
 
 
 def order(request):
@@ -37,18 +37,18 @@ def order(request):
     context = {
         'order_details': order_details,
     }
-    return render(request, 'user_partition/profile/order.html', context)
+    return render(request, f'{user_profile}order.html', context)
 
 
 def wallet_profile(request):
     user = Account.objects.get(email=request.user)
     wallets, check_created = user_profile.objects.get_or_create(account=user)
     return render(request,
-                  'user_partition/profile/wallet.html', {'wallets': wallets})
+                  f'{user_profile}wallet.html', {'wallets': wallets})
 
 
 def wishlist(request):
-    return render(request, 'user_partition/profile/wishlist.html')
+    return render(request, f'{user_profile}wishlist.html')
 
 
 def order_cancel(request, id):
@@ -69,4 +69,4 @@ def order_details(request, id):
         'order': order,
         'order_details': order_details,
     }
-    return render(request, 'user_partition/profile/order_detail.html', context)
+    return render(request, f'{user_profile}order_detail.html', context)

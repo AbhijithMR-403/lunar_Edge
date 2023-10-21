@@ -92,9 +92,13 @@
                         <i class="fas fa-heart text-dark"></i>
                         <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
                     </a>
-                    <a href='' class="btn px-0 ml-2">
+                    <a href="{% url "user_cart:user_cart"%}" class="btn px-0 ml-2">
                         <i class="fas fa-shopping-cart text-dark"></i>
+                        {% if cart_count %}
+                        <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">{{cart_count}}</span>
+                        {% else %}
                         <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
+                        {% endif %}
                     </a>
                 </div>
             </div>
@@ -108,7 +112,7 @@
                 </a>
             </div>
             <div class="col-lg-4 col-6 text-left">
-                <form action="">
+                {% comment %} <form action="">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search for products">
                         <div class="input-group-append">
@@ -117,7 +121,7 @@
                             </span>
                         </div>
                     </div>
-                </form>
+                </form> {% endcomment %}
             </div>
             <div class="col-lg-4 col-6 text-right">
                 <p class="m-0">Customer Service</p>
@@ -143,11 +147,7 @@
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Laptop <i class="fa fa-angle-right float-right mt-1"></i></a>
                             <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
                                 <a href="" class="dropdown-item">Gaming laptops</a>
-                                <a href="" class="dropdown-item">Causal laptops</a>
                                 <a href="" class="dropdown-item">Office laptops</a>
-                                <a href="" class="dropdown-item">High performance laptops</a>
-                                <a href="" class="dropdown-item">Low budget laptops</a>
-                                <a href="" class="dropdown-item">Students laptops</a>
                             </div>
                         </div>
                         <a href="" class="nav-item nav-link">Prebuild PC</a>
@@ -168,7 +168,7 @@
                         <div class="navbar-nav mr-auto py-0">
                             <a href={% url "user_home:home" %} class="nav-item nav-link">Home</a>
                             <a href={% url "user_home:shop" %} class="nav-item nav-link">Shop</a>
-                            <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
+                            {% comment %} <a href={% url "user_home:search" %}  class="nav-item nav-link">Search</a> {% endcomment %}
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down"></i></a>
                                 <div class="dropdown-menu bg-light rounded-0 border-0 m-0">

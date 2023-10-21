@@ -9,4 +9,7 @@ urlpatterns = [
     path('logout_user/', views.logout_user, name='logout_user'),
     path('product_details/<str:slug>',
          views.product_details, name='product_details'),
+    path('category/<int:id>/', views.category, name='category'),
+    path('search/', views.search, name='search'),
+    path('sort_by/<str:att>', views.sort_by, name='sort_by'),
 ]

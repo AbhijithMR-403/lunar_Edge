@@ -1,15 +1,18 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.http import HttpResponseRedirect
-from .form import addressbook_form
-from authenticator.models import Account, AddressBook
-from user_panel.models import Cart, Cart_item
-from .models import Payment, Order, OrderProduct
 from django.contrib import messages
 from django.views.decorators.cache import cache_control
 from django.conf import settings
 import uuid
 import razorpay
-# Create your views here.
+
+from authenticator.models import Account, AddressBook
+from .form import addressbook_form
+from user_panel.models import Cart, Cart_item
+from .models import Payment, Order, OrderProduct
+
+# ^ Template Path 
+order_path = "user_partition/order/"
 
 
 def add_address(request):
@@ -35,7 +38,7 @@ def checkout(request):
         messages.warning(request, 'Add Product To Cart')
         return redirect('user_cart:user_cart')
     subtotal = sum(i.product_id.sale_price * i.quantity for i in cart_details)
-    addresses = AddressBook.objects.filter(user=request.user)
+    addresses = AddressBook.objects.filter(user=request.user, is_active=True)
     discount = 0
     if cart_id.coupon:
         discount = cart_id.coupon.discount
@@ -47,20 +50,20 @@ def checkout(request):
         "cart_details": cart_details,
         "addresses": addresses,
     }
-    return render(request, "user_partition/order/checkout.html", context)
+    return render(request, f"{order_path}checkout.html", context)
 
 
 def default_address(request, id):
     address = AddressBook.objects.get(id=id)
     address.is_default = True
     address.save()
-    print(address, '\n\n\n\n\n')
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 def delete_address(request, id):
     address = AddressBook.objects.get(id=id)
-    address.delete()
+    address.is_active = False
+    address.save()
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
@@ -89,7 +92,6 @@ def place_order(request):
             additional_discount=discount,
         )
         order_object.save()
-
         request.session['cart_id'] = order_id
         if request.POST['payment'] == 'COD' or 'razorpay':
             payment_object.payment_method = request.POST['payment']
@@ -125,7 +127,6 @@ def cash_on_delivery(request):
         )
         ordered_product.save()
     cart = Cart.objects.get(user=request.user)
-    print(cart, '\n\n\n\n\n')
     cart.delete()
     return redirect('order:order_success')
 
@@ -142,25 +143,24 @@ def payment_gateway(request):
     # ^ Razor pay
     if payment_method.payment_method == 'razorpay':
         client = razorpay.Client(auth=(settings.KEY, settings.SECRET))
-        payment = client.order.create({'amount': Total_amount,
-                                       'currency': 'INR', 'payment_capture': 1})
+        payment = client.order.create({
+            'amount': Total_amount, 'currency': 'INR', 'payment_capture': 1})
         payment_method.payment_id = payment['id']
         payment_method.save()
-        print(payment)
 
     # ^Address
     address = AddressBook.objects.select_related('user').get(
         user__email=request.user, is_default=True)
-    print(payment_method.payment_method)
     context = {
         'address': address,
         'payment_method': payment_method,
         'Total_amount': Total_amount
     }
-    return render(request, 'user_partition/order/payment_gateway.html', context)
+    return render(request, f'{order_path}payment_gateway.html', context)
 
 
 def success(request):
+    print(request.user)
     user = Account.objects.get(email=request.user)
     cart_items = Cart_item.objects.select_related('cart_id').filter(
         cart_id__user=user)
@@ -201,4 +201,4 @@ def order_success(request):
         'user_order': user_order,
         'order_items': order_items,
     }
-    return render(request, 'user_partition/order/order_success.html', content)
+    return render(request, f'{order_path}order_success.html', content)

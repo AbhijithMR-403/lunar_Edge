@@ -1,35 +1,31 @@
 from collections import defaultdict
 from django.shortcuts import render, redirect
-from authenticator.models import Account
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.views.decorators.cache import cache_control
+
 from user_cart.models import Coupon
+from authenticator.models import Account
 from product_management.models import Product, Product_Variant
 from admin_panel.form import Coupon_form
 from order.models import Order
 
-# ! I had remove the inbuild template
-# ^ And add other one this might seen to be good
+# ^ Template Path
+chart_path = "admin_partition/chart/"
+
 
 # ^ Dashboard
-
-
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def dashboard(request):
-    # Later you can reduce this code
     if not request.user.is_superuser:
         return redirect('admin_panel:login')
 
     total_users_count = int(Account.objects.count())
     product_count = Product.objects.count()
     user_order = Order.objects.count()
-    # for i in monthly_order_totals:
     completed_orders = Order.objects.filter()
-
     monthly_totals_dict = defaultdict(float)
 
-    # Iterate over completed orders and calculate monthly totals
     for order in completed_orders:
         order_month = order.created_at.strftime('%m-%Y')
         monthly_totals_dict[order_month] += float(order.order_total)
@@ -44,14 +40,11 @@ def dashboard(request):
         'total_users_count': total_users_count,
         'product_count': product_count,
         'order': user_order,
-        # # 'orders':orders,
         'variants': variants,
         'months': months,
         'totals': totals,
-
-
     }
-    return render(request, 'admin_partition/chart/admin_chart.html', context)
+    return render(request, f'{chart_path}admin_chart.html', context)
 
 
 # ^ Logout
@@ -61,7 +54,6 @@ def logout_admin(request):
 
 
 #  ^ admin login
-
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_login(request):
     logout(request)
@@ -114,12 +106,16 @@ def block_unblock_user(request, id, block):
         user = Account.objects.get(id=id)
         user.is_active = (block == 1)
         user.save()
-    except:
+    except Exception:
+        messages.warning('There is no such user')
         pass
     return redirect('admin_panel:user_list')
 
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def coupon(request):
+    if not request.user.is_superuser:
+        return redirect('admin_panel:login')
     form = Coupon_form
     if request.method == "POST":
         form = Coupon_form(request.POST)
@@ -131,11 +127,13 @@ def coupon(request):
     return render(request, 'admin_partition/addfield.html', {'form': form})
 
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def chart(request):
+    if not request.user.is_superuser:
+        return redirect('admin_panel:login')
     total_users_count = int(Account.objects.count())
     product_count = Product.objects.count()
     order = Order.objects.filter().count()
-    # for i in monthly_order_totals:
     completed_orders = Order.objects.filter()
 
     monthly_totals_dict = defaultdict(float)
@@ -144,40 +142,36 @@ def chart(request):
     for order in completed_orders:
         order_month = order.created_at.strftime('%m-%Y')
         monthly_totals_dict[order_month] += float(order.order_total)
-
-    print(monthly_totals_dict)
     months = list(monthly_totals_dict.keys())
     totals = list(monthly_totals_dict.values())
-
-    monthNumber = []
-    totalOrders = []
-
     variants = Product_Variant.objects.all()
 
     context = {
         'total_users_count': total_users_count,
         'product_count': product_count,
         'order': order,
-        # # 'orders':orders,
         'variants': variants,
         'months': months,
         'totals': totals,
-
-
     }
-    return render(request, 'admin_partition/chart/admin_chart.html', context)
+    return render(request, f'{chart_path}admin_chart.html', context)
 
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def report(request):
+    if not request.user.is_superuser:
+        return redirect('admin_panel:login')
     sales = Order.objects.all()
     context = {
         'sales': sales,
     }
-    return render(request, 'admin_partition/chart/report.html', context)
+    return render(request, f'{chart_path}report.html', context)
 
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def filtered_sales(request):
-    # Get the minimum and maximum price values from the request parameters
+    if not request.user.is_superuser:
+        return redirect('admin_panel:login')
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
 
@@ -189,8 +183,6 @@ def filtered_sales(request):
     context = {
         "sales": orders,
         "start_date": start_date,
-        "end_date": end_date
-
+        "end_date": end_date,
     }
-
-    return render(request, 'admin_partition/chart/report.html', context)
+    return render(request, f'{chart_path}report.html', context)
