@@ -185,11 +185,15 @@ def success(request):
             quantity=quantity, product_price=price
         )
         ordered_product.save()
+    print(order_object)
+    print('\n\n\n')
+    print(OrderProduct.objects.filter(order=order_object))
     try:
         cart_item = Cart.objects.get(user=user)
+        print('you readed after delettion')
         cart_item.delete()
         return redirect('order:order_success')
-    except :
+    except:
         return HttpResponse("Cart does not exist for the current user.")
 
 
