@@ -65,13 +65,13 @@
                         and transportation, making them suitable for mobile use.[3] Today, laptops are used in a variety of settings, such as at work (especially on business trips),
                          in education, for playing games, web browsing, for personal multimedia, and for general home computer use.</p>
                     <div class="d-flex mb-3">
-                        <strong class="text-dark mr-1">Sizes:</strong>
+                        <strong class="text-dark mr-1 mt-2">Sizes:</strong>
                         <form>
                             {% for i in variants %}
                             <div class="custom-control custom-control-inline">
                                 <input type="radio" class="btn-check" name="options-outlined" id="danger-outlined" autocomplete="off" {% if i.id == detail.id %}checked{% endif %}>
-                                <label class="btn btn-outline-danger" for="danger-outlined">
-                                    <a class='text-decoration-none text-reset' href="{% url 'user_home:product_details' slug=i.product_variant_slug %}">{% for attribute in i.attributes.all %}
+                                <label class="btn btn-warning" for="danger-outlined">
+                                    <a class='text-decoration-none text-reset ' href="{% url 'user_home:product_details' slug=i.product_variant_slug %}">{% for attribute in i.attributes.all %}
                                     {{ attribute.attribute_value }}
                                 {% endfor %}
                                         </a>
@@ -87,14 +87,14 @@
                     <div class="d-flex align-items-center mb-4 pt-2">
                         <div class="input-group quantity mr-3" style="width: 130px;">
                             <div class="input-group-btn">
-                                <button class="btn btn-danger btn-minus">
-                                    <i class="fa fa-minus"></i>
+                                <button class="btn btn-minus">
+                                    <i class="fa fa-minus text-danger"></i>
                                 </button>
                             </div>
                             <input type="text" class="form-control border-0 text-center" value="1">
                             <div class="input-group-btn">
-                                <button class="btn btn-success btn-plus">
-                                    <i class="fa fa-plus"></i>
+                                <button class="btn btn-plus">
+                                    <i class="fa fa-plus text-success"></i>
                                 </button>
                             </div>
                         </div>

@@ -160,11 +160,10 @@ def payment_gateway(request):
 
 
 def success(request):
-    print(request.user)
-    user = Account.objects.get(email=request.user)
+    user = request.GET['user']
+    user = Account.objects.get(email=user)
     cart_items = Cart_item.objects.select_related('cart_id').filter(
         cart_id__user=user)
-    print(cart_items)
     order_id = request.GET['order_id']
 
     # ^ Payment table
@@ -187,7 +186,7 @@ def success(request):
         )
         ordered_product.save()
     try:
-        cart_item = Cart.objects.get(user=request.user)
+        cart_item = Cart.objects.get(user=user)
         cart_item.delete()
         return redirect('order:order_success')
     except :
