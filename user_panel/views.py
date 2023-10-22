@@ -27,7 +27,7 @@ def home_page(request):
 
 def product_page(request):
     products = Product_Variant.objects.all()
-    if request.session['filter']:
+    if 'filter' in request.session:
         pk_key = request.session['filter']
         products = Product_Variant.objects.filter(id__in=pk_key)
     else:
@@ -39,7 +39,7 @@ def product_page(request):
         cart_count = Cart_item.objects.filter(cart_id=cart).count()
     except Exception:
         cart_count = 0
-    if request.session['sort_by']:
+    if 'sort_by' in request.session:
         print(products)
         print(request.session['sort_by'])
         products = products.order_by(request.session['sort_by'])
