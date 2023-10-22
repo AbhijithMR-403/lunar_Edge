@@ -30,8 +30,7 @@ def product_page(request):
     if 'filter' in request.session:
         pk_key = request.session['filter']
         products = Product_Variant.objects.filter(id__in=pk_key)
-    else:
-        messages.warning(request, 'No such product')
+
     cart_count = 0
     categories = Category.objects.all()
     try:
@@ -90,7 +89,8 @@ def category(request, id):
         product_variants = [i.id for i in Product_Variant.objects.filter(product__in=products)]
     except Exception:
         product_variants = [i.id for i in Product_Variant.objects.all()]
-
+    if product_variants == []:
+        messages.warning(request, 'No such product')
     request.session['filter'] = product_variants
     return redirect('user_home:shop')
 
@@ -102,7 +102,8 @@ def search(request):
         products = Product_Variant.objects.filter(description__icontains=query)
         product_variants = [i.id for i in products]
         request.session['filter'] = product_variants
-        print(product_variants)
+        if product_variants == []:
+            messages.warning(request, 'No such product')
     return redirect('user_home:shop')
 
 
