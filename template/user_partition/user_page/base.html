@@ -172,11 +172,10 @@
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down"></i></a>
                                 <div class="dropdown-menu bg-light rounded-0 border-0 m-0">
-                                    <a href="cart.html" class="dropdown-item nav-item ">Shopping Cart</a>
-                                    <a href="checkout.html" class="dropdown-item nav-item ">Checkout</a>
+                                    <a href="{% url "user_cart:user_cart"%}" class="dropdown-item nav-item ">Shopping Cart</a>
                                 </div>
                             </div>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                            <a href="#" class="nav-item nav-link">Contact</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
                             <a href="" class="btn px-0">
