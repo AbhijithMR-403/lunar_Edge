@@ -19,6 +19,8 @@ def user_cart(request, slug=None):
     # ^ Check any item added to cart
     # & Else return to previous page
     if cart_items.count() == 0:
+        if (request.META.get('HTTP_REFERER')[-5:] == 'cart/'):
+            return redirect("user_home:home")
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
     discount = 0
     subtotal = sum(i.product_id.sale_price * i.quantity for i in cart_items)
