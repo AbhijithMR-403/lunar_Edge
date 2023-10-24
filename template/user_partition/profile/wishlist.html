@@ -17,20 +17,17 @@
                 {% for product in products %}
                 <tr>
                     <td class="image product-thumbnail">
-                        <img src="{{product.product.thumbnail_image.url}}" alt="#" class="img-fluid">
+                        <img src="{{product.product.thumbnail_image.url}}" alt="#" class="img-fluid" style="width: 125px;" >
                       </td>
                     <td class="product-des product-name">
-                        <h6 class="product-name"><a href="#">{{product.product.description}}</a></h6>
+                        <h6 class="product-name"><a class="text-decoration-none" href="#">{{product.product.description|slice:":105"}}....</a></h6>
                         </p>
                     </td>
-                    <td class="price" data-title="Price"><span>₹{{product.product.sale_price}} </span></td>
-                    {% comment %} <td class="text-center" data-title="Stock">
-                        <span class="color3 font-weight-bold">In Stock</span>
-                    </td> {% endcomment %}
+                    <td class="price" data-title="Price"><span>₹{{product.product.sale_price}} </span></td>-
                     <td class="text-right" data-title="Cart">
-                        <button class="btn btn-sm"><a class="text-decorator-none" href="{% url "user_cart:add_to_cart" id=product.id %}"><i class="fa-solid fa-cart-shopping"></i>Add to cart</a></button>
+                        <button class="btn btn-sm"><a class="text-decoration-none" class="text-decorator-none" href="{% url "user_cart:add_to_cart" id=product.product.id %}"><i class="fa-solid fa-cart-shopping"></i>Add to cart</a></button>
                     </td>
-                    <td class="action" data-title="Remove"><a href="{% url "user_profile:remove_wishlist" id=product.id %}"><i class="fa-solid fa-trash"></i></a></td>
+                    <td class="action" data-title="Remove"><a href="{% url "user_profile:remove_wishlist" id=product.product.id %}"><i class="fa-solid fa-trash"></i></a></td>
                 </tr>
                 {% endfor %}
                 
