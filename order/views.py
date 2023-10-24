@@ -62,15 +62,18 @@ def default_address(request, id):
 
 def delete_address(request, id):
     address = AddressBook.objects.get(id=id)
-    address.is_active = False
-    address.save()
+    address.delete()
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 def place_order(request):
     if request.method == "POST":
         user = Account.objects.get(email=request.user)
-        address = AddressBook.objects.get(user=user, is_default=True)
+        try:
+            address = AddressBook.objects.get(user=user, is_default=True)
+        except Exception:
+            messages.warning(request, 'Please Set Default Shipping Address')
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         cart_items = Cart_item.objects.select_related('cart_id').filter(
             cart_id__user=request.user)
         subtotal = sum(i.product_id.sale_price *
@@ -185,9 +188,7 @@ def success(request):
             quantity=quantity, product_price=price
         )
         ordered_product.save()
-    print(order_object)
-    print('\n\n\n')
-    print(OrderProduct.objects.filter(order=order_object))
+
     try:
         cart_item = Cart.objects.get(user=user)
         print('you readed after delettion')

@@ -46,7 +46,7 @@ def order(request):
 
 def wallet_profile(request):
     user = Account.objects.get(email=request.user)
-    wallets, check_created = user_profile_path.objects.get_or_create(
+    wallets, check_created = user_profile.objects.get_or_create(
         account=user)
     return render(request,
                   f'{user_profile_path}wallet.html', {'wallets': wallets})
