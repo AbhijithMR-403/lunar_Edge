@@ -9,8 +9,8 @@ urlpatterns = [
     path('default_address/<int:id>', views.default_address, name="default_address"),
     path('delete_address/<int:id>', views.delete_address, name="delete_address"),
     path('place_order', views.place_order, name="place_order"),
-    path('cash_on_delivery', views.cash_on_delivery, name="cash_on_delivery"),
     path('payment_gateway', views.payment_gateway, name='payment_gateway'),
     path('success', views.success, name='success'),
     path('order_success/', views.order_success, name='order_success'),
+    path('check_wallet/', views.check_wallet, name='check_wallet'),
 ]

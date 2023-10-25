@@ -125,11 +125,16 @@
                         <h6 class="font-weight-medium">Shipping</h6>
                         <h6 class="font-weight-medium">₹100</h6>
                     </div>
+                    <div class="d-flex justify-content-between">
+                        <h6 class="font-weight-medium">Wallet added</h6>
+                        <h6 class="font-weight-medium" id="Wallet_added">₹0</h6>
+                    </div>
                 </div>
+                {% comment %}? wallet {% endcomment %}
                 <div class="pt-2">
                     <div class="d-flex justify-content-between mt-2">
                         <h5>Total</h5>
-                        <h5>₹{{total}}</h5>
+                        <h5 id="total_amt">₹{{total}}</h5>
                     </div>
                 </div>
             </div>
@@ -151,11 +156,10 @@
                             <label class="custom-control-label" for="directcheck">COD</label>
                         </div>
                     </div>
-                    <div class="form-group mb-4">
-                        <div class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" name="payment" id="banktransfer" value="banktransfer" required>
-                            <label class="custom-control-label" for="banktransfer">Bank Transfer</label>
-                        </div>
+                    <div class="form-group mb-4"> {% csrf_token %}
+                            <input type="checkbox" id="wallet-balance" name="payment" value="wallet-balance">
+                            <label id="wallet_amt" for="wallet-balance">Wallet: </label>
+                            <div id="wallet-balance-amt">balance: {{wallet}}</div>
                     </div>
                     <button class="btn btn-block btn-primary font-weight-bold py-3">Place Order</button>
                 </div>
@@ -163,6 +167,37 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            $(document).on('change', '#wallet-balance', function() {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                const isChecked = $(this).is(':checked');
+        
+                $.ajax({
+                    url: '{% url "order:check_wallet" %}',
+                    type: 'POST',
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    data: {
+                        'total': {{total}},
+                        'isChecked': isChecked 
+                    },
+                    success: function(data) {
+                        if (!data.check) {
+                            window.location.href = '/checkout/';
+                        }
+                        console.log(data.wallet_used)
+                        if(data.check){
+                            $('#wallet-balance-amt').text('balance: ' + data.wallet_balance);                        }
+                            $('#Wallet_added').text('₹ ' + data.wallet_used); 
+                            $('#total_amt').text('₹ ' + data.total); 
+                    }
+                });
+            });
+        });
+    </script>
 </div>
 <!-- Checkout End -->
 
