@@ -130,11 +130,16 @@
                         <h6 class="font-weight-medium">Shipping</h6>
                         <h6 class="font-weight-medium">₹100</h6>
                     </div>
+                    <div class="d-flex justify-content-between">
+                        <h6 class="font-weight-medium">Wallet added</h6>
+                        <h6 class="font-weight-medium" id="Wallet_added">₹0</h6>
+                    </div>
                 </div>
+                {% comment %}? wallet {% endcomment %}
                 <div class="pt-2">
                     <div class="d-flex justify-content-between mt-2">
                         <h5>Total</h5>
-                        <h5>₹{{total}}</h5>
+                        <h5 id="total_amt">₹{{total}}</h5>
                     </div>
                 </div>
             </div>

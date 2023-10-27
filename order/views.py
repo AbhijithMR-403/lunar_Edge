@@ -11,7 +11,7 @@ from .form import addressbook_form
 from user_panel.models import Cart, Cart_item
 from .models import Payment, Order, OrderProduct
 
-# ^ Template Path 
+# ^ Template Path
 order_path = "user_partition/order/"
 
 
@@ -28,12 +28,15 @@ def add_address(request):
 
 
 def checkout(request):
+    if (request.META.get('HTTP_REFERER')[-9:] == 'checkout/'):
+        request.session['wallet'] = 0
     try:
         cart_id = Cart.objects.get(user=request.user)
     except Exception:
         return redirect('user_home:home')
     cart_details = Cart_item.objects.select_related(
         "cart_id").filter(cart_id=cart_id)
+    wallet_obj, check = user_profile.objects.get_or_create(account=request.user)
     if cart_details.count() == 0:
         messages.warning(request, 'Add Product To Cart')
         return redirect('user_cart:user_cart')
@@ -44,6 +47,7 @@ def checkout(request):
         discount = cart_id.coupon.discount
     total = subtotal + 100 - discount
     context = {
+        "wallet": wallet_obj.wallet,
         "cart_id": cart_id,
         "total": total,
         "subtotal": subtotal,
@@ -105,49 +109,31 @@ def place_order(request):
     return redirect('order:checkout')
 
 
-def cash_on_delivery(request):
-    cart_items = Cart_item.objects.select_related('cart_id').filter(
-        cart_id__user=request.user)
-    order_id = request.session['cart_id']
-    user = Account.objects.get(email=request.user)
-
-    # ^ Payment table
-    payment_object = Payment.objects.get(payment_order_id=order_id)
-    payment_object.payment_status = 'SUCCESS'
-    payment_object.save()
-
-    # ^ Order details
-    order_object = Order.objects.get(order_number=order_id)
-    order_object.order_status = 'Accepted'
-    order_object.save()
-    for cart_item in cart_items:
-        quantity = cart_item.quantity
-        product = cart_item.product_id
-        price = cart_item.product_id.sale_price
-        ordered_product = OrderProduct.objects.create(
-            order=order_object, user=user, product=product,
-            quantity=quantity, product_price=price
-        )
-        ordered_product.save()
-    cart = Cart.objects.get(user=request.user)
-    cart.delete()
-    return redirect('order:order_success')
-
-
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def payment_gateway(request):
     order_id = request.session['cart_id']
-    print(order_id)
+    wallet_discount = 0
+    if request.session['wallet']:
+        wallet_discount = int(request.session['wallet'])
+
     # ^ Payment method
     payment_method = Payment.objects.get(payment_order_id=order_id)
+    if request.session['wallet']:
+        payment_method.amount_paid = str(wallet_discount)
+        payment_method.save()
     if payment_method.payment_status == 'SUCCESS':
         return redirect("user_home:home")
     Total_amount = float(payment_method.amount_paid)
+
+    #  ^order details to add discound wallet
+    order_details = Order.objects.get(order_number=order_id)
+    order_details.additional_discount += wallet_discount
+    order_details.save()
     # ^ Razor pay
     if payment_method.payment_method == 'razorpay':
         client = razorpay.Client(auth=(settings.KEY, settings.SECRET))
         payment = client.order.create({
-            'amount': Total_amount, 'currency': 'INR', 'payment_capture': 1})
+            'amount': Total_amount*100, 'currency': 'INR', 'payment_capture': 1})
         payment_method.payment_id = payment['id']
         payment_method.save()
 
@@ -179,7 +165,6 @@ def success(request):
     order_object.order_status = 'Accepted'
     order_object.save()
     for cart_item in cart_items:
-        print(cart_item)
         quantity = cart_item.quantity
         product = cart_item.product_id
         price = cart_item.product_id.sale_price
@@ -191,7 +176,6 @@ def success(request):
 
     try:
         cart_item = Cart.objects.get(user=user)
-        print('you readed after delettion')
         cart_item.delete()
         return redirect('order:order_success')
     except:

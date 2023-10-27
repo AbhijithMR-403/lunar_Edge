@@ -37,7 +37,7 @@ def address(request):
 
 def order(request):
     order_details = Order.objects.select_related(
-        'user').filter(user__email=request.user)
+        'user').filter(user__email=request.user).exclude(order_status='New')
     context = {
         'order_details': order_details,
     }
@@ -62,7 +62,7 @@ def order_cancel(request, id):
     wallet_balance = user_profile.objects.get(account=request.user)
     cart_detail = Order.objects.get(id=id)
     cart_detail.order_status = 'Cancelled'
-    wallet_balance.wallet = float(cart_detail.payment.amount_paid)
+    wallet_balance.wallet = float(wallet_balance.wallet)+float(cart_detail.payment.amount_paid)
     wallet_balance.save()
     cart_detail.save()
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
