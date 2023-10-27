@@ -121,6 +121,11 @@
                         <h6>None</h6>
                         {% endif %}
                     </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <h6 class="font-weight-medium">Wallet</h6>
+                        <h6 class="font-weight-medium">₹100</h6>
+                    </div>
+                    
                     <div class="d-flex justify-content-between">
                         <h6 class="font-weight-medium">Shipping</h6>
                         <h6 class="font-weight-medium">₹100</h6>
@@ -151,10 +156,16 @@
                             <label class="custom-control-label" for="directcheck">COD</label>
                         </div>
                     </div>
-                    <div class="form-group mb-4">
-                        <div class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" name="payment" id="banktransfer" value="banktransfer" required>
-                            <label class="custom-control-label" for="banktransfer">Bank Transfer</label>
+                    {% comment %} ? Wallet Checkbox {% endcomment %}
+                    <div class="form-group mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="wallet-checkbox" name="payment" value="wallet-checkbox">
+                            <label class="form-check-label" for="wallet-checkbox">
+                                Wallet:
+                            </label>
+                        </div>
+                        <div id="wallet-balance-amt">
+                            Balance: {{ wallet }}
                         </div>
                     </div>
                     <button class="btn btn-block btn-primary font-weight-bold py-3">Place Order</button>
@@ -163,6 +174,32 @@
             </div>
         </div>
     </div>
+    {% comment %}  {% endcomment %}
+    <script>
+        $(document).ready(function() {
+            $(document).on('change', '#wallet-checkbox', function() {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                const isChecked = $(this).is(':checked');
+                $.ajax({
+                    url: '{% url "order:wallet_calculation" %}',
+                    type: 'POST',
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    data: {
+                        'total': {{total}},
+                        'isChecked': isChecked,
+                    },
+                    success: function(data) {
+                        //$('#wallet-balance-amt').html(`Balance: ${data['balance']}`);
+                        if (data.check == false)
+                        console.log('you have printed false')
+                    },
+                });
+            });
+        });
+    </script>
 </div>
 <!-- Checkout End -->
 

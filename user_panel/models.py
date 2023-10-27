@@ -11,7 +11,6 @@ class Cart(models.Model):
     coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, null=True)
     created_date = models.DateField(auto_now_add=True)
 
-
 class Cart_item(models.Model):
     product_id = models.ForeignKey(Product_Variant, on_delete=models.CASCADE)
     cart_id = models.ForeignKey(Cart, on_delete=models.CASCADE)

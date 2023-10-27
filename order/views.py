@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect, HttpResponse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.views.decorators.cache import cache_control
 from django.conf import settings
 import uuid
 import razorpay
 
-from authenticator.models import Account, AddressBook
+from authenticator.models import Account, AddressBook, user_profile
 from .form import addressbook_form
 from user_panel.models import Cart, Cart_item
 from .models import Payment, Order, OrderProduct
@@ -206,3 +206,14 @@ def order_success(request):
         'order_items': order_items,
     }
     return render(request, f'{order_path}order_success.html', content)
+
+
+def wallet_calculation(request):
+    user = user_profile.objects.get(account=request.user)
+    # order = Order.objects.get(order_number=request.session['cart_id'])
+    if request.POST['isChecked'] == 'false':
+        # order.wallet_discount = 0
+        # order.save()
+        return JsonResponse({'check': False})
+    
+    return JsonResponse({'success': 'Bro foung the right answer yooo'})
