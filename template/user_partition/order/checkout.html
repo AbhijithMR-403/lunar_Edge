@@ -121,18 +121,10 @@
                         <h6>None</h6>
                         {% endif %}
                     </div>
-                    <div class="d-flex justify-content-between mb-3">
-                        <h6 class="font-weight-medium">Wallet</h6>
-                        <h6 class="font-weight-medium">₹100</h6>
-                    </div>
                     
                     <div class="d-flex justify-content-between">
                         <h6 class="font-weight-medium">Shipping</h6>
                         <h6 class="font-weight-medium">₹100</h6>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <h6 class="font-weight-medium">Wallet added</h6>
-                        <h6 class="font-weight-medium" id="Wallet_added">₹0</h6>
                     </div>
                 </div>
                 {% comment %}? wallet {% endcomment %}
@@ -164,13 +156,14 @@
                     {% comment %} ? Wallet Checkbox {% endcomment %}
                     <div class="form-group mb-3">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="wallet-checkbox" name="payment" value="wallet-checkbox">
+                            <input type="checkbox" class="form-check-input" id="wallet-checkbox" name="payment" value="wallet-checkbox"
+                            {% if wallet_check %}checked{% endif %} >
                             <label class="form-check-label" for="wallet-checkbox">
-                                Wallet:
+                                Wallet: ₹<span id='wallet_used'>0</span>
                             </label>
                         </div>
-                        <div id="wallet-balance-amt">
-                            Balance: {{ wallet }}
+                        <div>
+                            Balance: <span id="wallet-balance-amt"></span>
                         </div>
                     </div>
                     <button class="btn btn-block btn-primary font-weight-bold py-3">Place Order</button>
@@ -181,30 +174,45 @@
     </div>
     {% comment %}  {% endcomment %}
     <script>
-        $(document).ready(function() {
-            $(document).on('change', '#wallet-checkbox', function() {
-                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-                const isChecked = $(this).is(':checked');
-                $.ajax({
-                    url: '{% url "order:wallet_calculation" %}',
-                    type: 'POST',
-                    dataType: 'json',
-                    headers: {
-                        'X-CSRFToken': csrftoken
-                    },
-                    data: {
-                        'total': {{total}},
-                        'isChecked': isChecked,
-                    },
-                    success: function(data) {
-                        //$('#wallet-balance-amt').html(`Balance: ${data['balance']}`);
-                        if (data.check == false)
-                        console.log('you have printed false')
-                    },
-                });
+        function handleWalletCheckboxChange() {
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const isChecked = $('#wallet-checkbox').is(':checked');
+            $.ajax({
+                url: '{% url "order:wallet_calculation" %}',
+                type: 'POST',
+                dataType: 'json',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                data: {
+                    'total': {{total}},
+                    'isChecked': isChecked,
+                },
+                success: function(data) {
+                    console.log(data.check)
+                    if (data.check == true) {
+                        $("#wallet-balance-amt").html(`${Math.floor(data['balance'])}`);
+                        $("#wallet_used").html(`${Math.floor(data['wallet_use'])}`);
+                        $("#total_amt").html(`${Math.floor(data['total_a'])}`);
+                    }
+                    else{
+                        $("#total_amt").html({{total}});
+                        $("#wallet_used").html(0);
+                        $("#wallet-balance-amt").html({{ wallet }});
+                    }
+                },
             });
+        }
+    
+        $(document).ready(function() {
+            // When the page is initially loaded
+            handleWalletCheckboxChange();
+    
+            // Handle checkbox change
+            $(document).on('change', '#wallet-checkbox', handleWalletCheckboxChange);
         });
     </script>
+    
 </div>
 <!-- Checkout End -->
 

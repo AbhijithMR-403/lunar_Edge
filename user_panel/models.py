@@ -10,6 +10,8 @@ class Cart(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, null=True)
     created_date = models.DateField(auto_now_add=True)
+    subtotal = models.IntegerField(default=0, null=True)
+
 
 class Cart_item(models.Model):
     product_id = models.ForeignKey(Product_Variant, on_delete=models.CASCADE)

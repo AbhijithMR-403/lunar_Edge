@@ -25,11 +25,13 @@ def add_address(request):
         else:
             print(form.non_field_errors())
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
-
-
+ 
+  
 def checkout(request):
+    wallet_check = request.session['wallet']
     if (request.META.get('HTTP_REFERER')[-9:] == 'checkout/'):
-        request.session['wallet'] = 0
+        print('you are in this checkout page here in checkout')
+
     try:
         cart_id = Cart.objects.get(user=request.user)
     except Exception:
@@ -41,6 +43,8 @@ def checkout(request):
         messages.warning(request, 'Add Product To Cart')
         return redirect('user_cart:user_cart')
     subtotal = sum(i.product_id.sale_price * i.quantity for i in cart_details)
+    cart_id.subtotal = subtotal
+    cart_id.save()
     addresses = AddressBook.objects.filter(user=request.user, is_active=True)
     discount = 0
     if cart_id.coupon:
@@ -53,6 +57,7 @@ def checkout(request):
         "subtotal": subtotal,
         "cart_details": cart_details,
         "addresses": addresses,
+        "wallet_check": wallet_check,
     }
     return render(request, f"{order_path}checkout.html", context)
 
@@ -71,18 +76,30 @@ def delete_address(request, id):
 
 
 def place_order(request):
+
     if request.method == "POST":
+        # ^ sub total amount
+        cart_items = Cart_item.objects.select_related('cart_id').filter(
+            cart_id__user=request.user)
+        subtotal = sum(i.product_id.sale_price *
+                       i.quantity for i in cart_items)
+        
+        # ^ Adding wallet amt if any
+        user_wallet = user_profile.objects.get(account=request.user).wallet
+        wallet = 0
+        if request.session['wallet']:
+            if (subtotal+100) < float(user_wallet):
+                wallet = subtotal
+            else:
+                wallet = float(user_wallet)
         user = Account.objects.get(email=request.user)
         try:
             address = AddressBook.objects.get(user=user, is_default=True)
         except Exception:
             messages.warning(request, 'Please Set Default Shipping Address')
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
-        cart_items = Cart_item.objects.select_related('cart_id').filter(
-            cart_id__user=request.user)
-        subtotal = sum(i.product_id.sale_price *
-                       i.quantity for i in cart_items)
         order_id = int(uuid.uuid4().hex[:5], 16)
+        request.session['cart_id'] = order_id
         discount = 0
         if Cart.objects.get(user=request.user).coupon:
             discount = Cart.objects.get(user=request.user).coupon.discount
@@ -90,16 +107,15 @@ def place_order(request):
         # ^ Payment table
         payment_object = Payment.objects.create(
             user=user, payment_order_id=order_id,
-            amount_paid=subtotal+100-discount, payment_status='PENDING')
+            amount_paid=subtotal+100-discount-wallet, payment_status='PENDING')
 
         # ^ Order details
         order_object = Order.objects.create(
             user=user, payment=payment_object, order_number=order_id,
             shipping_address=address, order_total=subtotal,
-            additional_discount=discount,
+            additional_discount=discount, wallet_discount=wallet
         )
         order_object.save()
-        request.session['cart_id'] = order_id
         if request.POST['payment'] == 'COD' or 'razorpay':
             payment_object.payment_method = request.POST['payment']
             payment_object.save()
@@ -112,23 +128,17 @@ def place_order(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def payment_gateway(request):
     order_id = request.session['cart_id']
-    wallet_discount = 0
-    if request.session['wallet']:
-        wallet_discount = int(request.session['wallet'])
 
     # ^ Payment method
     payment_method = Payment.objects.get(payment_order_id=order_id)
-    if request.session['wallet']:
-        payment_method.amount_paid = str(wallet_discount)
-        payment_method.save()
     if payment_method.payment_status == 'SUCCESS':
         return redirect("user_home:home")
     Total_amount = float(payment_method.amount_paid)
 
-    #  ^order details to add discound wallet
-    order_details = Order.objects.get(order_number=order_id)
-    order_details.additional_discount += wallet_discount
-    order_details.save()
+    # #  ^order details to add discound wallet
+    # order_details = Order.objects.get(order_number=order_id)
+    # order_details.additional_discount += wallet_discount
+    # order_details.save()
     # ^ Razor pay
     if payment_method.payment_method == 'razorpay':
         client = razorpay.Client(auth=(settings.KEY, settings.SECRET))
@@ -193,11 +203,26 @@ def order_success(request):
 
 
 def wallet_calculation(request):
+    print('you can reach here')
     user = user_profile.objects.get(account=request.user)
-    # order = Order.objects.get(order_number=request.session['cart_id'])
-    if request.POST['isChecked'] == 'false':
-        # order.wallet_discount = 0
-        # order.save()
+    if user.wallet == 0:
         return JsonResponse({'check': False})
     
-    return JsonResponse({'success': 'Bro foung the right answer yooo'})
+    if request.POST['isChecked'] == 'false':
+        request.session['wallet'] = False
+        return JsonResponse({'check': False})
+    
+    total = float(request.POST['total'])
+    request.session['wallet'] = True
+
+    if total < float(user.wallet):
+        wallet_balance = float(user.wallet) - total + 100
+        wallet_use = total - 100
+        print(wallet_use)
+        return JsonResponse({
+            'check': True, 'balance': str(wallet_balance),
+            'wallet_use': str(wallet_use), "total_a": '100'})
+    else:
+        total_balance = total - float(user.wallet)
+        return JsonResponse({
+            'check': True, 'total_a': str(total_balance), 'wallet_use': str(user.wallet)})
