@@ -93,6 +93,7 @@ def place_order(request):
             else:
                 wallet = float(user_wallet)
         user = Account.objects.get(email=request.user)
+        print(wallet)
         try:
             address = AddressBook.objects.get(user=user, is_default=True)
         except Exception:
@@ -183,6 +184,10 @@ def success(request):
             quantity=quantity, product_price=price
         )
         ordered_product.save()
+    # changing wallet
+    user_wallet = user_profile.objects.get(account=request.user)
+    user_wallet.wallet -= order_object.wallet_discount
+    user_wallet.save()
 
     try:
         cart_item = Cart.objects.get(user=user)
@@ -207,22 +212,22 @@ def wallet_calculation(request):
     user = user_profile.objects.get(account=request.user)
     if user.wallet == 0:
         return JsonResponse({'check': False})
-    
+
     if request.POST['isChecked'] == 'false':
         request.session['wallet'] = False
         return JsonResponse({'check': False})
-    
+
     total = float(request.POST['total'])
     request.session['wallet'] = True
 
     if total < float(user.wallet):
         wallet_balance = float(user.wallet) - total + 100
         wallet_use = total - 100
-        print(wallet_use)
         return JsonResponse({
-            'check': True, 'balance': str(wallet_balance),
-            'wallet_use': str(wallet_use), "total_a": '100'})
+            'check': True, 'balance': wallet_balance,
+            'wallet_use': wallet_use, "total_a": '100'})
     else:
         total_balance = total - float(user.wallet)
         return JsonResponse({
-            'check': True, 'total_a': str(total_balance), 'wallet_use': str(user.wallet)})
+            'check': True, 'total_a': total_balance,
+            'balance': 0, 'wallet_use': user.wallet})

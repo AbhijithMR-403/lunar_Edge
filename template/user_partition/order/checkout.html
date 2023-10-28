@@ -156,7 +156,7 @@
                     {% comment %} ? Wallet Checkbox {% endcomment %}
                     <div class="form-group mb-3">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="wallet-checkbox" name="payment" value="wallet-checkbox"
+                            <input type="checkbox" class="form-check-input" id="wallet-checkbox" name="wallet" value="wallet-checkbox"
                             {% if wallet_check %}checked{% endif %} >
                             <label class="form-check-label" for="wallet-checkbox">
                                 Wallet: ₹<span id='wallet_used'>0</span>
@@ -191,9 +191,9 @@
                 success: function(data) {
                     console.log(data.check)
                     if (data.check == true) {
-                        $("#wallet-balance-amt").html(`${Math.floor(data['balance'])}`);
-                        $("#wallet_used").html(`${Math.floor(data['wallet_use'])}`);
-                        $("#total_amt").html(`${Math.floor(data['total_a'])}`);
+                        $("#wallet-balance-amt").html(`${Math.round(data['balance'])}`);
+                        $("#wallet_used").html(`${Math.round(data['wallet_use'])}`);
+                        $("#total_amt").html(`${Math.round(data['total_a'])}`);
                     }
                     else{
                         $("#total_amt").html({{total}});
