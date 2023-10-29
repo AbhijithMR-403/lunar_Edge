@@ -5,7 +5,7 @@ from order.models import Order, OrderProduct
 
 def order_list(request):
     orders = Order.objects.select_related('user', 'shipping_address', 'payment').all()
-
+    
     context = {
         'orders': orders
     }
