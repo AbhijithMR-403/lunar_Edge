@@ -164,7 +164,7 @@ def report(request):
         return redirect('admin_panel:login')
     sales = Order.objects.select_related('user', 'shipping_address', 'payment').all()
 
-    p = Paginator(sales, 25)
+    p = Paginator(sales, 5)
     page = request.GET.get('page')
     try:
         sales_page = p.get_page(page)
