@@ -30,12 +30,12 @@
 <table class="table table-striped table-hover" id ='container_content'>
     <thead >
         <tr>
-          <th scope="col">
+          {% comment %} <th scope="col">
             <span class="custom-checkbox">
                 <input type="checkbox" id="selectAll">
                 <label for="selectAll"></label>
             </span>
-          </th>
+          </th> {% endcomment %}
           <th scope="col">Date</th>
           <th scope="col">Order Number</th>
           <th scope="col">Customer</th>
@@ -50,12 +50,12 @@
       <tbody>
         {% for sale_list in sales %}
         <tr>
-          <th scope="row">
+          {% comment %} <th scope="row">
             <span class="custom-checkbox">
                 <input type="checkbox" id="checkbox1" name="options[]" value="1">
                 <label for="checkbox1"></label>
             </span>
-          </th>
+          </th> {% endcomment %}
           <td>{{sale_list.created_at}}</td>
           <td>{{sale_list.order_number}}</td>
           <td>{{sale_list.user}}</td>

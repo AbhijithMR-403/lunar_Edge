@@ -104,11 +104,11 @@ def place_order(request):
         discount = 0
         if Cart.objects.get(user=request.user).coupon:
             discount = Cart.objects.get(user=request.user).coupon.discount
-
+            
         # ^ Payment table
         payment_object = Payment.objects.create(
             user=user, payment_order_id=order_id,
-            amount_paid=subtotal+100-discount-wallet, payment_status='PENDING')
+            amount_paid=subtotal+100-discount-int(wallet), payment_status='PENDING')
 
         # ^ Order details
         order_object = Order.objects.create(
