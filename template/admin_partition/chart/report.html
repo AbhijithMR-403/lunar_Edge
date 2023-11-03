@@ -77,7 +77,7 @@
         {% for page_num in sales.paginator.page_range %}
             {% if sales.number == page_num %}
                 <li class="page-item active" aria-current="page">
-                    <span class="page-link">{{ page_num }} <span class="sr-only">(current)</span></span>
+                    <span class="page-link"> <u>{{ page_num }}</u></span>
                 </li>
             {% else %}
                 <li class="page-item">

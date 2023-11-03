@@ -70,7 +70,7 @@
                             {% for i in variants %}
                             <div class="custom-control custom-control-inline">
                                 <input type="radio" class="btn-check" name="options-outlined" id="danger-outlined" autocomplete="off" {% if i.id == detail.id %}checked{% endif %}>
-                                <label class="btn btn-warning" for="danger-outlined">
+                                <label class="btn btn-outline-danger" for="danger-outlined">
                                     <a class='text-decoration-none text-reset ' href="{% url 'user_home:product_details' slug=i.product_variant_slug %}">{% for attribute in i.attributes.all %}
                                     {{ attribute.attribute_value }}
                                 {% endfor %}
