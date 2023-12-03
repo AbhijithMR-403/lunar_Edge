@@ -13,6 +13,7 @@
                         <li data-target="#header-carousel" data-slide-to="2"></li>
                     </ol>
                     <div class="carousel-inner">
+                        {% if banners %}
                         {% for banner in banners %}
                         <div class="carousel-item position-relative  {% if forloop.counter == 1 %}active{% endif %}" style="height: 430px;">
                             <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
@@ -25,6 +26,18 @@
                             </div>
                         </div>
                         {% endfor %}
+                        {% else %}
+                        <div class="carousel-item position-relative  active" style="height: 430px;">
+                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <img class="position-absolute w-100 h-100" src={% static 'img/nothing-here-img-lunar-edge.jpg' %} style="object-fit: cover; z-index: 0;">
+                                <div class="p-3" style=" max-width: 700px; background: rgb(18 18 18 / 30%); position: absolute;">
+                                    <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">Laptop</h1>
+                                    <p class="mx-md-5 px-5 animate__animated animate__bounceIn">Nothing</p>
+                                    <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="#">Shop Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
