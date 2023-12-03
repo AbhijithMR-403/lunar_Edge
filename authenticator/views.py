@@ -162,7 +162,7 @@ def email(request):
         )
         return redirect("user_partition:potp")
     else:
-        messages.error(request, "Invalid one")
+        messages.warning(request, "Invalid one")
     return render(request, f"{auth_user_path}email.html")
 
 
