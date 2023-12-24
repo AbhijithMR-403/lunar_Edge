@@ -48,7 +48,6 @@ def add_attribute(request):
             return render(request, 'admin_partition/addfield.html',
                           {'form': form})
         attribute = form.save(commit=False)
-        print(attribute)
         attribute.save()
         return redirect('product:add_attribute')
     return render(request, 'admin_partition/addfield.html', {'form': form})
@@ -63,7 +62,6 @@ def add_attribute_value(request):
             return render(request, 'admin_partition/addfield.html',
                           {'form': form})
         product = form.save(commit=False)
-        print(product)
         product.save()
         return redirect('product:add_attribute_value')
     return render(request, 'admin_partition/addfield.html', {'form': form})
@@ -71,22 +69,16 @@ def add_attribute_value(request):
 
 # ^ Add product variant
 def add_product_variant(request, slug):
-    print(Product.objects.get(product_slug=slug))
     form = product_variant_form
     form.product = Product.objects.get(product_slug=slug)
-    print(type(form))
     if request.method == 'POST':
 
         form = product_variant_form(request.POST, request.FILES)
-        print(form)
         if not form.is_valid():
             return render(request, 'admin_partition/addfield.html',
                           {'form': form})
         product_variant = form.save(commit=False)
         product_variant.product = Product.objects.get(product_slug=slug)
-        print(product_variant)
-        # product = form.save()
-        # print()
         product_variant.save()
         form.save_m2m()
         return redirect('product:product_list')

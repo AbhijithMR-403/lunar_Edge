@@ -39,8 +39,6 @@ def product_page(request):
     except Exception:
         cart_count = 0
     if 'sort_by' in request.session:
-        print(products)
-        print(request.session['sort_by'])
         products = products.order_by(request.session['sort_by'])
     content = {
         "products": products,
@@ -98,7 +96,6 @@ def category(request, id):
 def search(request):
     if request.method == "POST":
         query = request.POST["search"]
-        print('hello')
         products = Product_Variant.objects.filter(description__icontains=query)
         product_variants = [i.id for i in products]
         request.session['filter'] = product_variants

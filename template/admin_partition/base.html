@@ -26,7 +26,7 @@
     <div class="screen-overlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
-            <a href="index.html" class="brand-wrap">
+            <a href="" class="brand-wrap">
                 <img src="{% static 'img/logo/lunarEdge_logo1.png' %}" class="logo" alt="Lunar Edge">
             </a>
             <div>
@@ -35,19 +35,19 @@
         </div>
         <nav>
             <ul class="menu-aside">
-                <li class="menu-item active">
+                <li class="menu-item {% if current_tag == 1 %}active{% endif %}">
                     <a class="menu-link" href="{% url 'admin_panel:dashboard' %}"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
 
-                <li class="menu-item">
+                <li class="menu-item {% if current_tag == 2 %}active{% endif %}">
                     <a class="menu-link" href="{% url 'product:product_list' %}"><i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Product List</span>
                     </a>
                 </li>
 
-                <li class="menu-item has-submenu">
+                <li class="menu-item has-submenu {% if current_tag == 3 %}block active{% endif %}">
                     <a class="menu-link" href="page-orders-1.html"> <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders And Coupons</span>
                     </a>
@@ -57,22 +57,22 @@
                         {% comment %} <a href="{% url "admin_order:order_details" %}">Order detail</a> {% endcomment %}
                     </div>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item {% if current_tag == 4 %}active{% endif %}">
                     <a class="menu-link" href="{% url 'category:category_list' %}"> <i class="icon material-icons md-store"></i>
                         <span class="text">Categories</span>
                     </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item {% if current_tag == 5 %}active{% endif %}">
                     <a class="menu-link" href="{% url 'admin_panel:user_list' %}"> <i class="icon material-icons md-person"></i>
                         <span class="text">User list</span>
                     </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item {% if current_tag == 6 %}active{% endif %}">
                     <a class="menu-link" href="{% url 'admin_panel:report' %}"> <i class="icon material-icons md-stars"></i>
                         <span class="text">Order report</span>
                     </a>
                 </li>
-                <li class="menu-item has-submenu">
+                <li class="menu-item has-submenu {% if current_tag == 7 %}block active{% endif %}">
                     <a class="menu-link" href="page-form-product-1.html"> <i class="icon material-icons md-add_box"></i>
                         <span class="text">Product variant</span>
                     </a>

@@ -86,7 +86,6 @@ def minus_cart(request, slug):
 
 def add_coupon(request):
     coupon_code = Coupon.objects.filter(code=request.POST['coupon'])
-    print(coupon_code)
     if coupon_code.exists():
         user_cart = Cart.objects.get(user=request.user)
         user_cart.coupon = coupon_code[0]

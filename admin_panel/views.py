@@ -31,7 +31,6 @@ def dashboard(request):
         order_month = order.created_at.strftime('%m-%Y')
         monthly_totals_dict[order_month] += float(order.order_total)
 
-    print(monthly_totals_dict)
     months = list(monthly_totals_dict.keys())
     totals = list(monthly_totals_dict.values())
 
@@ -58,9 +57,7 @@ def logout_admin(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_login(request):
     logout(request)
-    print(request.user, '\n\n\n\n')
     if request.user.is_superuser:
-        print('\n\nsdfadfa\n\n\n')
         redirect('admin_panel:dashboard')
     if request.method == 'POST':
         email = request.POST['email']

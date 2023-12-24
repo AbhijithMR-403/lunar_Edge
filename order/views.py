@@ -29,8 +29,6 @@ def add_address(request):
   
 def checkout(request):
     wallet_check = request.session['wallet']
-    if (request.META.get('HTTP_REFERER')[-9:] == 'checkout/'):
-        print('you are in this checkout page here in checkout')
 
     try:
         cart_id = Cart.objects.get(user=request.user)
@@ -93,7 +91,6 @@ def place_order(request):
             else:
                 wallet = float(user_wallet)
         user = Account.objects.get(email=request.user)
-        print(wallet)
         try:
             address = AddressBook.objects.get(user=user, is_default=True)
         except Exception:
@@ -208,7 +205,6 @@ def order_success(request):
 
 
 def wallet_calculation(request):
-    print('you can reach here')
     user = user_profile.objects.get(account=request.user)
     if user.wallet == 0:
         return JsonResponse({'check': False})

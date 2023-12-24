@@ -91,8 +91,6 @@ def add_wishlist(request, id):
 
 def remove_wishlist(request, id):
     product = Product_Variant.objects.get(id=id)
-    print(product, id, request.user, '\n\n\n')
-    print(WishList.objects.filter(user=request.user, product=product))
     try:
         wishlist = WishList.objects.get(user=request.user, product=product)
         wishlist.delete()

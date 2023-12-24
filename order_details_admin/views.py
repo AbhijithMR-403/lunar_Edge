@@ -15,7 +15,6 @@ def order_list(request):
 def order_details(request, id):
     order = Order.objects.get(id=id)
     order_items = OrderProduct.objects.filter(order=id)
-    print(order_items)
     context = {
         'order': order,
         'order_items': order_items,
