@@ -121,15 +121,17 @@
                         <h6>None</h6>
                         {% endif %}
                     </div>
+                    
                     <div class="d-flex justify-content-between">
                         <h6 class="font-weight-medium">Shipping</h6>
                         <h6 class="font-weight-medium">₹100</h6>
                     </div>
                 </div>
+                {% comment %}? wallet {% endcomment %}
                 <div class="pt-2">
                     <div class="d-flex justify-content-between mt-2">
                         <h5>Total</h5>
-                        <h5>₹{{total}}</h5>
+                        <h5 id="total_amt">₹{{total}}</h5>
                     </div>
                 </div>
             </div>
@@ -151,10 +153,17 @@
                             <label class="custom-control-label" for="directcheck">COD</label>
                         </div>
                     </div>
-                    <div class="form-group mb-4">
-                        <div class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" name="payment" id="banktransfer" value="banktransfer" required>
-                            <label class="custom-control-label" for="banktransfer">Bank Transfer</label>
+                    {% comment %} ? Wallet Checkbox {% endcomment %}
+                    <div class="form-group mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="wallet-checkbox" name="wallet" value="wallet-checkbox"
+                            {% if wallet_check %}checked{% endif %} >
+                            <label class="form-check-label" for="wallet-checkbox">
+                                Wallet: ₹<span id='wallet_used'>0</span>
+                            </label>
+                        </div>
+                        <div>
+                            Balance: <span id="wallet-balance-amt"></span>
                         </div>
                     </div>
                     <button class="btn btn-block btn-primary font-weight-bold py-3">Place Order</button>
@@ -163,6 +172,47 @@
             </div>
         </div>
     </div>
+    {% comment %}  {% endcomment %}
+    <script>
+        function handleWalletCheckboxChange() {
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const isChecked = $('#wallet-checkbox').is(':checked');
+            $.ajax({
+                url: '{% url "order:wallet_calculation" %}',
+                type: 'POST',
+                dataType: 'json',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                data: {
+                    'total': {{total}},
+                    'isChecked': isChecked,
+                },
+                success: function(data) {
+                    console.log(data.check)
+                    if (data.check == true) {
+                        $("#wallet-balance-amt").html(`${Math.round(data['balance'])}`);
+                        $("#wallet_used").html(`${Math.round(data['wallet_use'])}`);
+                        $("#total_amt").html(`${Math.round(data['total_a'])}`);
+                    }
+                    else{
+                        $("#total_amt").html({{total}});
+                        $("#wallet_used").html(0);
+                        $("#wallet-balance-amt").html({{ wallet }});
+                    }
+                },
+            });
+        }
+    
+        $(document).ready(function() {
+            // When the page is initially loaded
+            handleWalletCheckboxChange();
+    
+            // Handle checkbox change
+            $(document).on('change', '#wallet-checkbox', handleWalletCheckboxChange);
+        });
+    </script>
+    
 </div>
 <!-- Checkout End -->
 

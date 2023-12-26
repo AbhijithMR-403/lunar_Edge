@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.views.decorators.cache import cache_control
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from user_cart.models import Coupon
 from authenticator.models import Account
@@ -30,7 +31,6 @@ def dashboard(request):
         order_month = order.created_at.strftime('%m-%Y')
         monthly_totals_dict[order_month] += float(order.order_total)
 
-    print(monthly_totals_dict)
     months = list(monthly_totals_dict.keys())
     totals = list(monthly_totals_dict.values())
 
@@ -57,9 +57,7 @@ def logout_admin(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_login(request):
     logout(request)
-    print(request.user, '\n\n\n\n')
     if request.user.is_superuser:
-        print('\n\nsdfadfa\n\n\n')
         redirect('admin_panel:dashboard')
     if request.method == 'POST':
         email = request.POST['email']
@@ -161,9 +159,19 @@ def chart(request):
 def report(request):
     if not request.user.is_superuser:
         return redirect('admin_panel:login')
-    sales = Order.objects.all()
+    sales = Order.objects.select_related('user', 'shipping_address', 'payment').all()
+
+    p = Paginator(sales, 25)
+    page = request.GET.get('page')
+    try:
+        sales_page = p.get_page(page)
+    except PageNotAnInteger:
+        sales_page = p.page(1)
+    except EmptyPage:
+        sales_page = p.page(p.num_pages)
+
     context = {
-        'sales': sales,
+        'sales': sales_page,
     }
     return render(request, f'{chart_path}report.html', context)
 
