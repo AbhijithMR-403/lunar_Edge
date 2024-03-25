@@ -10,6 +10,7 @@ from django.http import HttpResponseRedirect
 # Create your views here.
 
 def user_cart(request, slug=None):
+    request.session['wallet'] = False
     if not request.user.is_authenticated:
         messages.warning(request, "You needs to login first")
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
@@ -26,7 +27,6 @@ def user_cart(request, slug=None):
     subtotal = sum(i.product_id.sale_price * i.quantity for i in cart_items)
     total = subtotal + 100
     if user_cart.coupon:
-        print(user_cart.coupon)
         if user_cart.coupon.minimum_amount < total:
             discount = user_cart.coupon.discount
 
@@ -86,7 +86,6 @@ def minus_cart(request, slug):
 
 def add_coupon(request):
     coupon_code = Coupon.objects.filter(code=request.POST['coupon'])
-    print(coupon_code)
     if coupon_code.exists():
         user_cart = Cart.objects.get(user=request.user)
         user_cart.coupon = coupon_code[0]

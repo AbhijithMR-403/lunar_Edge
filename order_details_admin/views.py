@@ -4,8 +4,10 @@ from order.models import Order, OrderProduct
 
 
 def order_list(request):
+    orders = Order.objects.select_related('user', 'shipping_address', 'payment').all()
+    
     context = {
-        'orders': Order.objects.all()
+        'orders': orders
     }
     return render(request, "admin_partition/order/order_list.html", context)
 
@@ -13,7 +15,6 @@ def order_list(request):
 def order_details(request, id):
     order = Order.objects.get(id=id)
     order_items = OrderProduct.objects.filter(order=id)
-    print(order_items)
     context = {
         'order': order,
         'order_items': order_items,
