@@ -26,9 +26,6 @@ requests==2.31.0
 six==1.16.0
 sqlparse==0.4.4
 tinycss2==1.2.1
-tzdata==2023.3
 urllib3==2.0.6
-webencodings==0.5.1
-websocket-client==1.6.4
 zopfli==0.2.3
 python-decouple==3.8

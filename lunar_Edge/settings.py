@@ -29,6 +29,7 @@ DEBUG = config('DEBUG',default=False,cast=bool)
 ALLOWED_HOSTS = ["*"]
 
 
+CSRF_TRUSTED_ORIGINS = ["https://lunar-edge.online"]
 # Application definition
 
 INSTALLED_APPS = [
