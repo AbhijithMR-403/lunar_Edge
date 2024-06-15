@@ -60,7 +60,7 @@
                                                 {% endif %}
                                             </p>
                                         </td>
-                                        <td>${{cart_item.sub_total}}</td>
+                                        <td>₹{{cart_item.sub_total}}</td>
                                     </tr>
                                     {% endfor %}
                                     
@@ -78,17 +78,17 @@
                         <div class="table-responsive">
                             <table class="table">
                                 <tbody>
-                                    <tr>
+                                    {% comment %} <tr>
                                         <td class="cart_total_label">Cart Subtotal</td>
                                         <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">${{total}}</span></td>
-                                    </tr>
+                                    </tr> {% endcomment %}
                                     <tr>
                                         <td class="cart_total_label">Shipping</td>
                                         <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping</td>
                                     </tr>
                                     <tr>
                                         <td class="cart_total_label">Total</td>
-                                        <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand">${{payment_method.amount_paid}}</span></strong></td>
+                                        <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand">₹{{payment_method.amount_paid}}</span></strong></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -120,8 +120,8 @@
 
 <script>
     var options = {
-        "key": "rzp_test_amAFuSg9hjXZsy", // Enter the Key ID generated from the Dashboard
-        "amount": {{payment_method.amount_paid}}*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "key": "rzp_test_Q2CfPgrXHBjvkM", // Enter the Key ID generated from the Dashboard
+        "amount": {{payment_method.amount_paid}} * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
         "currency": "INR",
         "name": "lunar_edge",
         "description": "Purchases",

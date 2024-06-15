@@ -140,6 +140,7 @@ def payment_gateway(request):
     # ^ Razor pay
     if payment_method.payment_method == 'razorpay':
         client = razorpay.Client(auth=(settings.KEY, settings.SECRET))
+        print(client)
         payment = client.order.create({
             'amount': Total_amount*100, 'currency': 'INR', 'payment_capture': 1})
         payment_method.payment_id = payment['id']
