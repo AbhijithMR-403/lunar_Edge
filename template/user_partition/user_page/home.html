@@ -134,8 +134,8 @@
                         <img class="img-fluid w-100" src="{{ product.thumbnail_image.url }}" alt="">
                         <div class="product-action">
                             <a class="btn btn-outline-dark btn-square" href="{% url 'user_cart:add_to_cart' id=product.id %}"><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href="{% url 'user_profile:add_wishlist' id=product.id %}"><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
+                            <!-- <a class="btn btn-outline-dark btn-square" href="{% url 'user_profile:add_wishlist' id=product.id %}"><i class="far fa-heart"></i></a> -->
+                            <!-- <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a> -->
                             <a class="btn btn-outline-dark btn-square" href='{% url "user_home:product_details" slug=product.product_variant_slug %}'><i class="fa fa-search"></i></a>
                         </div>
                     </div>
