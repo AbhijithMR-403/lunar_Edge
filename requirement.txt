@@ -15,7 +15,7 @@ idna==3.4
 mypy-extensions==1.0.0
 packaging==23.2
 pathspec==0.11.2
-Pillow==10.0.1
+pillow==10.0.1
 platformdirs==3.11.0
 pycparser==2.21
 pydyf==0.8.0
@@ -29,3 +29,4 @@ tinycss2==1.2.1
 urllib3==2.0.6
 zopfli==0.2.3
 python-decouple==3.8
+psycopg2-binary==2.9.10
